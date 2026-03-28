@@ -1,0 +1,2 @@
+apache-beam==2.71.0
+google-crc32c==1.8.0
