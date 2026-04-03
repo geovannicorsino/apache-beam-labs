@@ -22,7 +22,6 @@ with beam.Pipeline() as p:
 
     employees_pc = p | "Employees" >> beam.Create(employees)
 
-    # calcula média salarial — vai virar o side input
     avg_salary = (
         employees_pc
         | "Extract salary" >> beam.Map(lambda e: e["salary"])
