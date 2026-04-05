@@ -28,23 +28,22 @@ contractors = [
 ]
 
 
-p = beam.Pipeline()
 
-rh_processed = (
-    p
-    | "RH Employees" >> beam.Create(employees)
-    | "Process RH" >> ProcessEmployees(tax_rate=0.27)
-    | "Print RH" >> beam.Map(print)
-)
+with beam.Pipeline() as p:
+    rh_processed = (
+        p
+        | "RH Employees" >> beam.Create(employees)
+        | "Process RH" >> ProcessEmployees(tax_rate=0.27)
+        | "Print RH" >> beam.Map(print)
+    )
 
-eng_processed = (
-    p
-    | "Eng Employees" >> beam.Create(contractors)
-    | "Process Eng" >> ProcessEmployees(tax_rate=0.20)
-    | "Print Eng" >> beam.Map(print)
-)
+    eng_processed = (
+        p
+        | "Eng Employees" >> beam.Create(contractors)
+        | "Process Eng" >> ProcessEmployees(tax_rate=0.20)
+        | "Print Eng" >> beam.Map(print)
+    )
 
-p.run().wait_until_finish()
 
 # {'name': 'ALICE',   'department': 'HR',          'salary': 5000, 'tax': 1350.0}
 # {'name': 'BOB',     'department': 'HR',          'salary': 6000, 'tax': 1620.0}

@@ -19,3 +19,10 @@ with beam.Pipeline() as p:
         | "Convert to uppercase" >> beam.Map(lambda x: x.upper())
         | "Print uppercase" >> beam.Map(print)
     )
+
+# Hello, Alice Smith!
+# HELLO, ALICE SMITH!
+# Hello, Bob Johnson!
+# HELLO, BOB JOHNSON!
+# Hello, Charlie Brown!
+# HELLO, CHARLIE BROWN!

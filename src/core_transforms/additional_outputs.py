@@ -1,41 +1,40 @@
-from apache_beam import pvalue
 import apache_beam as beam
+from apache_beam.pvalue import TaggedOutput
 
 
-# Define a DoFn that validates employee records and routes valid and invalid records to different outputs
-VALID = "valid"
-INVALID = "invalid"
-
-
-class ValidateDoFn(beam.DoFn):
+class RouteRecords(beam.DoFn):
     def process(self, element):
-        if element["salary"] > 0 and element["name"]:
-            yield element  # principal output (default)
-        else:
-            yield pvalue.TaggedOutput(INVALID, element)  # secondary output
+        try:
+            if element.get("value") is None:
+                yield TaggedOutput("dead_letter", element)
+            elif element["value"] > 0:
+                yield TaggedOutput("valid", element)
+            else:
+                yield TaggedOutput("invalid", element)
+        except Exception as e:
+            yield TaggedOutput("dead_letter", {**element, "_error": str(e)})
 
 
-p = beam.Pipeline()
-employees_pc = p | beam.Create([
-    {"name": "Alice",   "salary": 5000},
-    {"name": "",        "salary": 3000},  # invalid
-    {"name": "Charlie", "salary": -100},  # invalid
-])
+with beam.Pipeline() as p:
+    records = p | beam.Create([
+        {"id": 1, "value": 10},
+        {"id": 2, "value": -5},
+        {"id": 3, "value": None},
+    ])
 
-results = (
-    employees_pc
-    | "Validate" >> beam.ParDo(ValidateDoFn()).with_outputs(INVALID, main="valid")
-)
+    results = (
+        records
+        | "Route" >> beam.ParDo(RouteRecords()).with_outputs(
+            "invalid",
+            "dead_letter",
+            main="valid"
+        )
+    )
 
-valid_employees = results.valid
-invalid_employees = results[INVALID]
+    results["valid"]       | "Write Valid"       >> beam.Map(lambda x: print(f"Write Valid: {x}"))
+    results["invalid"]     | "Write Invalid"     >> beam.Map(lambda x: print(f"Write Invalid: {x}"))
+    results["dead_letter"] | "Write Dead Letter" >> beam.Map(lambda x: print(f"Write Dead Letter: {x}"))
 
-valid_employees | "Print valid" >> beam.Map(print)
-invalid_employees | "Print invalid" >> beam.Map(print)
-
-# valid:   {"name": "Alice", "salary": 5000}
-# invalid: {"name": "", "salary": 3000}
-# invalid: {"name": "Charlie", "salary": -100}
-
-
-p.run().wait_until_finish()
+# Output: 
+# Write Invalid: {'id': 2, 'value': -5}
+# Write Dead Letter: {'id': 3, 'value': None}
