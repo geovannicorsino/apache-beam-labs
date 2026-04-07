@@ -1,3 +1,15 @@
+"""
+CombineFn | Define a custom combining strategy by implementing the four-phase accumulator protocol.
+
+Subclass beam.CombineFn and implement create_accumulator, add_input, merge_accumulators,
+and extract_output to express aggregations that cannot be reduced to a single built-in function.
+Use it when you need custom logic such as filtering, conditional accumulation, or complex state.
+
+Example input:
+    [1, 2, 3, 4, 5]
+Example output:
+    6   (sum of even numbers: 2 + 4)
+"""
 import apache_beam as beam
 
 
@@ -29,4 +41,3 @@ with beam.Pipeline() as p:
         | "Print results" >> beam.Map(print)
     )
 
-# 6

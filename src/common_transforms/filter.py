@@ -1,3 +1,18 @@
+"""
+Filter | Keep only elements that satisfy a predicate.
+
+Passes each element through a boolean function and drops those that return False.
+Use it to exclude invalid, out-of-range, or unwanted records from a pipeline.
+Side inputs (e.g., AsIter) let the predicate reference a dynamic allowlist computed at runtime.
+
+Example input:
+    [{'name': 'Strawberry', 'duration': 'perennial'}, {'name': 'Potato', 'duration': 'PERENNIAL'}, ...]
+Example output:
+    {'name': 'Strawberry', 'duration': 'perennial'}
+    {'name': 'Carrot', 'duration': 'biennial'}
+    {'name': 'Eggplant', 'duration': 'perennial'}
+    {'name': 'Tomato', 'duration': 'annual'}
+"""
 import apache_beam as beam
 
 with beam.Pipeline() as p:
@@ -30,7 +45,3 @@ with beam.Pipeline() as p:
         )
         | beam.Map(print))
 
-# {'name': 'Strawberry', 'duration': 'perennial'}
-# {'name': 'Carrot', 'duration': 'biennial'}
-# {'name': 'Eggplant', 'duration': 'perennial'}
-# {'name': 'Tomato', 'duration': 'annual'}

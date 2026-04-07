@@ -1,3 +1,19 @@
+"""
+Composite Transform | Bundle multiple transforms into a reusable, named PTransform subclass.
+
+Subclass beam.PTransform and implement expand() to group a sequence of transforms behind
+a single, parameterizable step. Use it to eliminate repetition when the same pipeline
+fragment is applied to multiple PCollections with different configuration.
+
+Example input:
+    employees:   [{'name': 'Alice', 'salary': 5000}, {'name': '  Bob ', 'salary': 6000}, ...]
+    contractors: [{'name': 'Dave',  'salary': 8000}, {'name': 'Eve  ', 'salary': 9000}, ...]
+Example output:
+    {'name': 'ALICE', 'department': 'HR',          'salary': 5000, 'tax': 1350.0}
+    {'name': 'BOB',   'department': 'HR',          'salary': 6000, 'tax': 1620.0}
+    {'name': 'DAVE',  'department': 'Engineering', 'salary': 8000, 'tax': 1600.0}
+    {'name': 'EVE',   'department': 'Engineering', 'salary': 9000, 'tax': 1800.0}
+"""
 import apache_beam as beam
 
 
@@ -28,7 +44,6 @@ contractors = [
 ]
 
 
-
 with beam.Pipeline() as p:
     rh_processed = (
         p
@@ -43,9 +58,3 @@ with beam.Pipeline() as p:
         | "Process Eng" >> ProcessEmployees(tax_rate=0.20)
         | "Print Eng" >> beam.Map(print)
     )
-
-
-# {'name': 'ALICE',   'department': 'HR',          'salary': 5000, 'tax': 1350.0}
-# {'name': 'BOB',     'department': 'HR',          'salary': 6000, 'tax': 1620.0}
-# {'name': 'DAVE',    'department': 'Engineering', 'salary': 8000, 'tax': 1600.0}
-# {'name': 'EVE',     'department': 'Engineering', 'salary': 9000, 'tax': 1800.0}

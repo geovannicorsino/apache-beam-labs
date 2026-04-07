@@ -1,3 +1,15 @@
+"""
+CombinePerKey(sum) | Sum numeric values grouped by key.
+
+Aggregates all values associated with the same key using Python's built-in sum.
+Use it to produce per-key totals from a PCollection of (key, value) pairs.
+
+Example input:
+    [('Messi', 1), ('Ronaldo', 2), ('Ronaldo', 1), ('Ronaldo', 3), ('Messi', 1)]
+Example output:
+    ('Messi', 2)
+    ('Ronaldo', 6)
+"""
 import apache_beam as beam
 
 with beam.Pipeline() as p:
@@ -23,6 +35,3 @@ with beam.Pipeline() as p:
         | "Group goals by player" >> beam.CombinePerKey(sum)
         | "Print results" >> beam.Map(print)
     )
-
-# ('Messi', 2)
-# ('Ronaldo', 6)

@@ -1,3 +1,18 @@
+"""
+Count.PerElement | Count occurrences of each unique element in a PCollection.
+
+Applies a frequency count to every distinct value, returning (element, count) tuples.
+Use it when you need to aggregate how many times each item appears across the collection.
+
+Example input:
+    ['Alice', 'Bob', 'Alice', 'Charlie', 'Ronaldo', 'Bob', 'Alice', 'Messi']
+Example output:
+    ('Alice', 3)
+    ('Bob', 2)
+    ('Charlie', 1)
+    ('Ronaldo', 1)
+    ('Messi', 1)
+"""
 import apache_beam as beam
 
 with beam.Pipeline() as p:
@@ -16,9 +31,3 @@ with beam.Pipeline() as p:
         | 'Count appearances' >> beam.combiners.Count.PerElement()
         | 'Print results' >> beam.Map(print)
     )
-
-# ('Messi', 1)
-# ('Alice', 3)
-# ('Bob', 2)
-# ('Charlie', 1)
-# ('Ronaldo', 1)

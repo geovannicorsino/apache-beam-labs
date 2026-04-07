@@ -1,3 +1,18 @@
+"""
+Map | Apply a one-to-one transformation to every element in a PCollection.
+
+Each input element produces exactly one output element; the collection size is unchanged.
+Use Map for simple, stateless transformations such as formatting, type conversion, or field extraction.
+Multiple Map steps can be chained to build a sequential transformation pipeline.
+
+Example input:
+    [('Alice', 'Smith'), ('Bob', 'Johnson'), ('Charlie', 'Brown')]
+Example output:
+    Hello, Alice Smith!
+    HELLO, ALICE SMITH!
+    Hello, Bob Johnson!
+    ...
+"""
 import apache_beam as beam
 
 
@@ -19,10 +34,3 @@ with beam.Pipeline() as p:
         | "Convert to uppercase" >> beam.Map(lambda x: x.upper())
         | "Print uppercase" >> beam.Map(print)
     )
-
-# Hello, Alice Smith!
-# HELLO, ALICE SMITH!
-# Hello, Bob Johnson!
-# HELLO, BOB JOHNSON!
-# Hello, Charlie Brown!
-# HELLO, CHARLIE BROWN!

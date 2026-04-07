@@ -1,3 +1,17 @@
+"""
+GroupByKey | Collect all values that share the same key into a single (key, iterable) pair.
+
+After grouping, each key maps to an iterable of all its associated values, which downstream
+steps can then aggregate or process together.
+Use it when you need to consolidate scattered key-value pairs before applying a per-group operation.
+
+Example input:
+    [('banana', 2), ('apple', 4), ('lemon', 3), ('Apple', 1), ('Banana', 5), ('Lemon', 2)]
+Example output:
+    ('banana', 7)
+    ('apple', 5)
+    ('lemon', 5)
+"""
 import apache_beam as beam
 
 with beam.Pipeline() as p:

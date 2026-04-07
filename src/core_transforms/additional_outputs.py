@@ -1,3 +1,17 @@
+"""
+Additional Outputs (Tagged Outputs) | Route elements to multiple named output PCollections from a single DoFn.
+
+Use TaggedOutput inside process() to label each emitted element with a tag, then access each
+named stream via results[tag] after calling with_outputs().
+Use it to implement dead-letter queues, validation splits, or any multi-path routing logic.
+
+Example input:
+    [{'id': 1, 'value': 10}, {'id': 2, 'value': -5}, {'id': 3, 'value': None}]
+Example output:
+    valid:        {'id': 1, 'value': 10}
+    invalid:      {'id': 2, 'value': -5}
+    dead_letter:  {'id': 3, 'value': None}
+"""
 import apache_beam as beam
 from apache_beam.pvalue import TaggedOutput
 
@@ -34,7 +48,3 @@ with beam.Pipeline() as p:
     results["valid"]       | "Write Valid"       >> beam.Map(lambda x: print(f"Write Valid: {x}"))
     results["invalid"]     | "Write Invalid"     >> beam.Map(lambda x: print(f"Write Invalid: {x}"))
     results["dead_letter"] | "Write Dead Letter" >> beam.Map(lambda x: print(f"Write Dead Letter: {x}"))
-
-# Output: 
-# Write Invalid: {'id': 2, 'value': -5}
-# Write Dead Letter: {'id': 3, 'value': None}

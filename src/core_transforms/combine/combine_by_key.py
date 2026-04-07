@@ -1,3 +1,16 @@
+"""
+CombinePerKey | Apply a CombineFn independently to the values of each key in a keyed PCollection.
+
+Works like CombineGlobally but scoped to each key, so every key gets its own aggregated result.
+Use it when you need per-group custom aggregations on (key, value) pairs.
+
+Example input:
+    [('Ronaldo', 1), ('Messi', 2), ('Messi', 3), ('Neymar', 4), ('Neymar', 5)]
+Example output:
+    ('Ronaldo', {'even': 0, 'odd': 1})
+    ('Messi',   {'even': 2, 'odd': 3})
+    ('Neymar',  {'even': 4, 'odd': 5})
+"""
 import apache_beam as beam
 
 
@@ -37,6 +50,3 @@ with beam.Pipeline() as p:
         | "Print results" >> beam.Map(print)
     )
 
-# ('Ronaldo', {'even': 0, 'odd': 1})
-# ('Messi', {'even': 2, 'odd': 3})
-# ('Neymar', {'even': 4, 'odd': 5})

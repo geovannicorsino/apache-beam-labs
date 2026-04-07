@@ -1,3 +1,16 @@
+"""
+Branching | Fan a single PCollection out into multiple independent downstream paths.
+
+Any intermediate PCollection can be consumed by more than one transform simultaneously.
+Use it to apply different processing logic to the same data without re-reading the source.
+
+Example input:
+    [{'name': 'Alice', 'department': 'HR'}, {'name': 'Bob', 'department': 'Engineering'}, ...]
+Example output:
+    HR branch:          {'name': 'Alice', 'department': 'HR'}
+                        {'name': 'Charlie', 'department': 'HR'}
+    Engineering branch: {'name': 'Bob', 'department': 'Engineering'}
+"""
 import apache_beam as beam
 
 
@@ -27,8 +40,3 @@ with beam.Pipeline() as p:
         | "Print Engineering Employees" >> beam.Map(print_element)
     )
 
-
-# Output:
-# {'name': 'Alice', 'department': 'HR'}
-# {'name': 'Bob', 'department': 'Engineering'}
-# {'name': 'Charlie', 'department': 'HR'}

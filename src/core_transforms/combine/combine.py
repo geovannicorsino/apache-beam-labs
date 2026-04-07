@@ -1,3 +1,14 @@
+"""
+CombineGlobally | Reduce an entire PCollection to a single value using a combining function.
+
+Applies an associative and commutative function across all elements, producing one output.
+Use it for global aggregations such as total sum, count, or maximum across the whole dataset.
+
+Example input:
+    [1, 2, 3, 4, 5]
+Example output:
+    15
+"""
 import apache_beam as beam
 
 
@@ -15,4 +26,3 @@ with beam.Pipeline() as p:
         | "Print results" >> beam.Map(print)
     )
 
-# Output: 15

@@ -1,3 +1,16 @@
+"""
+Partition | Split a single PCollection into a fixed number of disjoint sub-collections.
+
+A partitioning function maps each element to an integer index in [0, num_partitions).
+Use it when different subsets of your data require different processing logic applied in parallel.
+
+Example input:
+    [{'name': 'Alice', 'tier': 'gold', ...}, {'name': 'Bob', 'tier': 'bronze', ...}, ...]
+Example output:
+    bronze partition: {'id': 2, 'name': 'Bob',   'tier': 'bronze', 'spent': 200,   'discount': 0.05}
+    silver partition: {'id': 3, 'name': 'Carol',  'tier': 'silver', 'spent': 1500,  'discount': 0.10}
+    gold   partition: {'id': 1, 'name': 'Alice',  'tier': 'gold',   'spent': 9500,  'discount': 0.20}
+"""
 import apache_beam as beam
 
 
@@ -34,11 +47,3 @@ with beam.Pipeline() as p:
     gold | "Discount Gold" >> beam.Map(
         lambda x: {**x, "discount": 0.20}
     ) | "Print Gold" >> beam.Map(print)
-
-# Output:
-# {'id': 1, 'name': 'Alice', 'tier': 'gold', 'spent': 9500, 'discount': 0.2}
-# {'id': 2, 'name': 'Bob', 'tier': 'bronze', 'spent': 200, 'discount': 0.05}
-# {'id': 3, 'name': 'Carol', 'tier': 'silver', 'spent': 1500, 'discount': 0.1}
-# {'id': 4, 'name': 'Dan', 'tier': 'gold', 'spent': 12000, 'discount': 0.2}
-# {'id': 5, 'name': 'Eve', 'tier': 'bronze', 'spent': 80, 'discount': 0.05}
-# {'id': 6, 'name': 'Frank', 'tier': 'silver', 'spent': 3000, 'discount': 0.1}
