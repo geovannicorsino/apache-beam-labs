@@ -31,6 +31,7 @@ src/
 │   ├── map/                 # Mapping and grouping operations 🗺️
 │   └── combine/             # Combine and aggregation patterns ➕
 ├── windowing/               # Streaming windowing strategies ⏱️
+├── triggers/                # Streaming trigger strategies
 ├── io_connectors/           # Reading and writing data 📥📤
 ├── challenges/              # Exercises based on Tour of Beam 🎯
 └── case_studies/            # Real-world pipeline examples 💼
@@ -93,6 +94,15 @@ src/
 | `windowing/sliding_window.py` | `SlidingWindows` | Rolling averages |
 | `windowing/session_window.py` | `Sessions` | User session analytics |
 
+### Triggers (Streaming)
+
+| File | Trigger | Description |
+|------|---------|-------------|
+| `triggers/after_watermark.py` | `AfterWatermark` | Event time trigger with early and late firings |
+| `triggers/after_count.py` | `AfterCount` | Data-driven trigger: fires every N elements |
+| `triggers/after_processing_time.py` | `AfterProcessingTime` | Processing time trigger: fires every N seconds |
+| `triggers/composite_trigger.py` | `AfterFirst` | Combine triggers with OR|
+
 ### I/O 📥📤
 
 | File | Concept | Description |
@@ -131,5 +141,6 @@ python src/common_transforms/count.py
 - **Aggregations**: `CombineGlobally`, `CombinePerKey`, `Count`, `Mean`, `Sum`, `Max`, `Min`
 - **Grouping**: `GroupByKey`, `CoGroupByKey`, `WithKeys`
 - **Advanced**: Side inputs, multiple outputs, composite transforms, custom `CombineFn`
-- **Windowing**: `GlobalWindows`, `FixedWindows`, `SlidingWindows`, `Sessions`, triggers, accumulation modes
+- **Windowing**: `GlobalWindows`, `FixedWindows`, `SlidingWindows`, `Sessions`
+- **Triggers**: `AfterWatermark`, `AfterCount`, `AfterProcessingTime`, `AfterFirst`, accumulation modes
 - **I/O**: `ReadFromText`, `WriteToText`, `ReadFromPubSub`, CSV parsing
