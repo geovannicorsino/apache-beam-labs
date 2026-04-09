@@ -7,20 +7,22 @@ Use it for local development, debugging, or whenever a flat text file is the tar
 
 Example input:
     ['Alice', 'Bob', 'Charlie']
-Example output (./data/test/text-00000-of-00001):
+Example output (./data/test/names.txt):
     Alice
     Bob
     Charlie
 """
 import apache_beam as beam
 
-p1 = beam.Pipeline()
 
-
-names = (
-    p1
-    | "Create a list of names" >> beam.Create(["Alice", "Bob", "Charlie"])
-    | "Write to Text File" >> beam.io.WriteToText("./data/test/text", num_shards=1)
-)
-
-p1.run().wait_until_finish()
+with beam.Pipeline() as p:
+    names = (
+        p
+        | "Create a list of names" >> beam.Create(["Alice", "Bob", "Charlie"])
+        | "Write to Text File" >> beam.io.WriteToText(
+            "./data/test/names",
+            file_name_suffix=".txt",
+            shard_name_template="",
+            num_shards=1,
+        )
+    )

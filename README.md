@@ -107,7 +107,17 @@ src/
 
 | File | Concept | Description |
 |------|---------|-------------|
-| `io_connectors/write_text.py` | `WriteToText` | Write to text files |
+| `io_connectors/text-io/read_text.py` | `ReadFromText` | Read lines from a local text file |
+| `io_connectors/text-io/read_gcs.py` | `ReadFromText (GCS)` | Read lines from a GCS text file |
+| `io_connectors/text-io/write_text.py` | `WriteToText` | Write a PCollection to a local text file |
+| `io_connectors/text-io/write_gcs.py` | `WriteToText (GCS)` | Write a PCollection to a GCS text file |
+| `io_connectors/bigqueryio/read_table_bq.py` | `ReadFromBigQuery (Table)` | Read all rows from a BigQuery table |
+| `io_connectors/bigqueryio/read_query_bq.py` | `ReadFromBigQuery (Query)` | Read results of a SQL query from BigQuery |
+| `io_connectors/bigqueryio/write_bq.py` | `WriteToBigQuery` | Write a PCollection to a BigQuery table |
+| `io_connectors/avro/write_avro.py` | `WriteToAvro` | Write a PCollection to an Avro file |
+| `io_connectors/avro/read_avro.py` | `ReadFromAvro` | Read records from an Avro file |
+| `io_connectors/parquet/write_parquet.py` | `WriteToParquet` | Write a PCollection to a Parquet file |
+| `io_connectors/parquet/read_parquet.py` | `ReadFromParquet` | Read records from a Parquet file |
 
 ### Challenges 🎯
 

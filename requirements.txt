@@ -1,2 +1,1 @@
-apache-beam[tfrecord]==2.71.0
-google-cloud-pubsub==2.27.2
+apache-beam[gcp]==2.71.0
