@@ -26,11 +26,11 @@ def explode_purchases(record):
         yield {"user": data["user"], "item": item}
 
 
-with beam.Pipeline() as p:
-    (
-        p
-        | "Create Events" >> beam.Create(events)
-        | "Explode Purchases" >> beam.FlatMap(explode_purchases)
-        | "Print Results" >> beam.Map(print)
-    )
-
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | "Create Events" >> beam.Create(events)
+            | "Explode Purchases" >> beam.FlatMap(explode_purchases)
+            | "Print Results" >> beam.Map(print)
+        )

@@ -9,7 +9,7 @@ from typing import Dict, List, Any
 import apache_beam as beam
 import csv
 
-CSV_PATH = 'data\challenge\sample1000.csv'
+CSV_PATH = 'data/challenge/sample1000.csv'
 
 SCHEMA = {
     "VendorID": int,
@@ -66,15 +66,16 @@ def parse_row(line: str, fields: List[str], schema: Dict) -> Dict[str, Any]:
     }
 
 
-with beam.Pipeline() as p:
-    taxi_orders = (
-        p
-        | 'Read Taxi Orders' >> beam.io.ReadFromText(CSV_PATH, skip_header_lines=1)
-        | 'Split Line to Dict' >> beam.Map(parse_row, fields=get_header(CSV_PATH), schema=SCHEMA)
-        | 'Key by threshold' >> beam.Map(
-            lambda x: ("below" if x["total_amount"] <
-                       15 else "above", x["total_amount"])
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        taxi_orders = (
+            p
+            | 'Read Taxi Orders' >> beam.io.ReadFromText(CSV_PATH, skip_header_lines=1)
+            | 'Split Line to Dict' >> beam.Map(parse_row, fields=get_header(CSV_PATH), schema=SCHEMA)
+            | 'Key by threshold' >> beam.Map(
+                lambda x: ("below" if x["total_amount"] <
+                           15 else "above", x["total_amount"])
+            )
+            | 'Sum total amounts by key' >> beam.CombinePerKey(sum)
+            | 'Print Orders' >> beam.Map(print)
         )
-        | 'Sum total amounts by key' >> beam.CombinePerKey(sum)
-        | 'Print Orders' >> beam.Map(print)
-    )

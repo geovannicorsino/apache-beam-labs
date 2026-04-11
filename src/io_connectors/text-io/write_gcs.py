@@ -15,14 +15,15 @@ Example output (gs://bucket/data/test/names.txt):
 import apache_beam as beam
 
 
-with beam.Pipeline() as p:
-    names = (
-        p
-        | "Create a list of names" >> beam.Create(["Alice", "Bob", "Charlie"])
-        | "Write to GCS" >> beam.io.WriteToText(
-            "gs://geo-test-labs/data/test/names",
-            file_name_suffix=".txt",
-            shard_name_template="",
-            num_shards=1,
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        names = (
+            p
+            | "Create a list of names" >> beam.Create(["Alice", "Bob", "Charlie"])
+            | "Write to GCS" >> beam.io.WriteToText(
+                "gs://geo-test-labs/data/test/names",
+                file_name_suffix=".txt",
+                shard_name_template="",
+                num_shards=1,
+            )
         )
-    )

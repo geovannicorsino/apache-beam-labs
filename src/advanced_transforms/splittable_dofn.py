@@ -67,13 +67,14 @@ class ProcessWordsSplittable(beam.DoFn):
             cur += 1
 
 
-with beam.Pipeline() as p:
-    (
-        p
-        | 'Create sentences' >> beam.Create([
-            'the quick brown fox',
-            'jumps over the lazy dog',
-        ])
-        | 'Process words' >> beam.ParDo(ProcessWordsSplittable())
-        | 'Print' >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | 'Create sentences' >> beam.Create([
+                'the quick brown fox',
+                'jumps over the lazy dog',
+            ])
+            | 'Process words' >> beam.ParDo(ProcessWordsSplittable())
+            | 'Print' >> beam.Map(print)
+        )

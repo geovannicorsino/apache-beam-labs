@@ -27,13 +27,13 @@ salaries = [
     ("Charlie", 6000),
 ]
 
-with beam.Pipeline() as p:
-    emp_pc = p | "Employees" >> beam.Create(employees)
-    sal_pc = p | "Salaries" >> beam.Create(salaries)
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        emp_pc = p | "Employees" >> beam.Create(employees)
+        sal_pc = p | "Salaries" >> beam.Create(salaries)
 
-    result = (
-        {"employee": emp_pc, "salary": sal_pc}
-        | "CoGroup" >> beam.CoGroupByKey()
-        | "Print" >> beam.Map(print)
-    )
-
+        result = (
+            {"employee": emp_pc, "salary": sal_pc}
+            | "CoGroup" >> beam.CoGroupByKey()
+            | "Print" >> beam.Map(print)
+        )

@@ -14,11 +14,11 @@ A hands-on learning project exploring Apache Beam concepts through progressively
 
 ## 📋 Requirements
 
-- Python 3.8+
+- Python 3.12+
 - Apache Beam 2.71.0
 
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
 ```
 
 ## 🗂️ Project Structure
@@ -40,8 +40,20 @@ src/
 ## 🚀 Quick Start
 
 1. Clone the repository
-2. Install dependencies: `pip install -r requirements.txt`
-3. Run an example: `python src/common_transforms/count.py`
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   venv/Scripts/activate  # Windows
+   source venv/bin/activate  # macOS/Linux
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -e ".[dev]"
+   ```
+4. Run an example:
+   ```bash
+   python src/common_transforms/count.py
+   ```
 
 ## 📖 Examples
 
@@ -156,6 +168,22 @@ For example:
 ```bash
 python src/common_transforms/count.py
 ```
+
+## 🧪 Tests
+
+Unit tests use Apache Beam's `TestPipeline` with `assert_that` to validate pipeline outputs without side effects.
+
+```bash
+venv/Scripts/python.exe -m pytest tests/ -W ignore
+```
+
+| File                                                                       | What it tests                                      |
+| -------------------------------------------------------------------------- | -------------------------------------------------- |
+| [`tests/test_combine_fns.py`](tests/test_combine_fns.py)                   | `SumEvenFn` and `SumEvenOrOddFn` accumulator logic |
+| [`tests/test_routing.py`](tests/test_routing.py)                           | `RouteRecords` (TaggedOutput) and `ParseAndValidateDoFn` (Dead Letter Queue) |
+| [`tests/test_side_input.py`](tests/test_side_input.py)                     | `EnrichDoFn` with `AsSingleton` side inputs        |
+| [`tests/test_stateful_dofn.py`](tests/test_stateful_dofn.py)               | `DeduplicateByKeyDoFn` stateful deduplication      |
+| [`tests/test_metrics_combine_fn.py`](tests/test_metrics_combine_fn.py)     | `MetricsCombineFn` windowed metric aggregation     |
 
 ## Key Concepts Covered
 

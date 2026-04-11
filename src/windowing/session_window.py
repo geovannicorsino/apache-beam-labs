@@ -61,16 +61,17 @@ def parse_message(message):
     return json.loads(message.decode("utf-8"))
 
 
-options = PipelineOptions()
-options.view_as(StandardOptions).streaming = True
+if __name__ == '__main__':
+    options = PipelineOptions()
+    options.view_as(StandardOptions).streaming = True
 
-with beam.Pipeline(options=options) as p:
-    (
-        p
-        | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-        | "Parse" >> beam.Map(parse_message)
-        | "ExtractKV" >> beam.Map(lambda e: (e["user_id"], e))
-        | "Window" >> beam.WindowInto(Sessions(GAP_SECONDS))
-        | "Combine" >> beam.CombinePerKey(SessionCombineFn())
-        | "Print" >> beam.ParDo(PrintSessionDoFn())
-    )
+    with beam.Pipeline(options=options) as p:
+        (
+            p
+            | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+            | "Parse" >> beam.Map(parse_message)
+            | "ExtractKV" >> beam.Map(lambda e: (e["user_id"], e))
+            | "Window" >> beam.WindowInto(Sessions(GAP_SECONDS))
+            | "Combine" >> beam.CombinePerKey(SessionCombineFn())
+            | "Print" >> beam.ParDo(PrintSessionDoFn())
+        )

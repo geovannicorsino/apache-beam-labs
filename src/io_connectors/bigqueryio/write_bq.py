@@ -39,21 +39,22 @@ SCHEMA = {
     ]
 }
 
-with beam.Pipeline() as p:
-    (
-        p
-        | 'Create rows' >> beam.Create([
-            {'id': 1, 'name': 'Alice', 'age': 30},
-            {'id': 2, 'name': 'Bob',   'age': 25},
-            {'id': 3, 'name': 'Carol', 'age': 35},
-        ])
-        | 'WriteToBigQuery' >> WriteToBigQuery(
-            table=TABLE,
-            schema=SCHEMA,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
-            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            # STREAMING_INSERTS: writes directly to BQ without needing a GCS temp bucket
-            # FILE_LOADS (default): requires custom_gcs_temp_location or --temp_location
-            method=WriteToBigQuery.Method.STREAMING_INSERTS,
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | 'Create rows' >> beam.Create([
+                {'id': 1, 'name': 'Alice', 'age': 30},
+                {'id': 2, 'name': 'Bob',   'age': 25},
+                {'id': 3, 'name': 'Carol', 'age': 35},
+            ])
+            | 'WriteToBigQuery' >> WriteToBigQuery(
+                table=TABLE,
+                schema=SCHEMA,
+                write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+                create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+                # STREAMING_INSERTS: writes directly to BQ without needing a GCS temp bucket
+                # FILE_LOADS (default): requires custom_gcs_temp_location or --temp_location
+                method=WriteToBigQuery.Method.STREAMING_INSERTS,
+            )
         )
-    )

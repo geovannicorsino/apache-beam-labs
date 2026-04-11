@@ -29,15 +29,15 @@ class ExpandTagsDoFn(beam.DoFn):
             yield (element["user_id"], tag)
 
 
-with beam.Pipeline() as p:
-    (
-        p
-        | "Create Users" >> beam.Create([
-            {"user_id": "u1", "tags": ["python", "beam"]},
-            {"user_id": "u2", "tags": ["spark"]},
-            {"user_id": "u3", "tags": ["beam", "dataflow", "gcp"]},
-        ])
-        | "Expand Tags" >> beam.ParDo(ExpandTagsDoFn())
-        | "Print Results" >> beam.Map(print)
-    )
-
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | "Create Users" >> beam.Create([
+                {"user_id": "u1", "tags": ["python", "beam"]},
+                {"user_id": "u2", "tags": ["spark"]},
+                {"user_id": "u3", "tags": ["beam", "dataflow", "gcp"]},
+            ])
+            | "Expand Tags" >> beam.ParDo(ExpandTagsDoFn())
+            | "Print Results" >> beam.Map(print)
+        )

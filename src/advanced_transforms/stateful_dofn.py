@@ -52,16 +52,17 @@ class DeduplicateByKeyDoFn(beam.DoFn):
         yield element
 
 
-with beam.Pipeline() as p:
-    (
-        p
-        | "Events" >> beam.Create([
-            ("order-1", {"amount": 100.0}),
-            ("order-2", {"amount": 200.0}),
-            ("order-1", {"amount": 100.0}),  # duplicate
-            ("order-3", {"amount": 150.0}),
-            ("order-2", {"amount": 200.0}),  # duplicate
-        ])
-        | "Deduplicate" >> beam.ParDo(DeduplicateByKeyDoFn())
-        | "Print" >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | "Events" >> beam.Create([
+                ("order-1", {"amount": 100.0}),
+                ("order-2", {"amount": 200.0}),
+                ("order-1", {"amount": 100.0}),  # duplicate
+                ("order-3", {"amount": 150.0}),
+                ("order-2", {"amount": 200.0}),  # duplicate
+            ])
+            | "Deduplicate" >> beam.ParDo(DeduplicateByKeyDoFn())
+            | "Print" >> beam.Map(print)
+        )

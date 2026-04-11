@@ -32,10 +32,11 @@ class TakeFirstN(beam.DoFn):
             yield element
 
 
-with beam.Pipeline() as p:
-    names = (
-        p
-        | "Read from Text File" >> beam.io.ReadFromText("./data/dept_data.txt")
-        | "Take first 10 lines" >> beam.ParDo(TakeFirstN(10))
-        | "Print output" >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        names = (
+            p
+            | "Read from Text File" >> beam.io.ReadFromText("./data/dept_data.txt")
+            | "Take first 10 lines" >> beam.ParDo(TakeFirstN(10))
+            | "Print output" >> beam.Map(print)
+        )

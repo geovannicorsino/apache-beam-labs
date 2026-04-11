@@ -19,24 +19,24 @@ def print_element(element):
     return element
 
 
-with beam.Pipeline() as p:
-    input_employees = (
-        p
-        | "Create a list of employees" >> beam.Create([{"name": "Alice", "department": "HR"},
-                                                       {"name": "Bob",
-                                                        "department": "Engineering"},
-                                                       {"name": "Charlie", "department": "HR"}])
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        input_employees = (
+            p
+            | "Create a list of employees" >> beam.Create([{"name": "Alice", "department": "HR"},
+                                                           {"name": "Bob",
+                                                            "department": "Engineering"},
+                                                           {"name": "Charlie", "department": "HR"}])
+        )
 
-    hr_team = (
-        input_employees
-        | "Filter HR Employees" >> beam.Filter(lambda emp: emp["department"] == "HR")
-        | "Print HR Employees" >> beam.Map(print_element)
-    )
+        hr_team = (
+            input_employees
+            | "Filter HR Employees" >> beam.Filter(lambda emp: emp["department"] == "HR")
+            | "Print HR Employees" >> beam.Map(print_element)
+        )
 
-    engineering_team = (
-        input_employees
-        | "Filter Engineering Employees" >> beam.Filter(lambda emp: emp["department"] == "Engineering")
-        | "Print Engineering Employees" >> beam.Map(print_element)
-    )
-
+        engineering_team = (
+            input_employees
+            | "Filter Engineering Employees" >> beam.Filter(lambda emp: emp["department"] == "Engineering")
+            | "Print Engineering Employees" >> beam.Map(print_element)
+        )

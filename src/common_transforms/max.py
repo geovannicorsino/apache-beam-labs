@@ -12,26 +12,26 @@ Example output:
 """
 import apache_beam as beam
 
-with beam.Pipeline() as p:
-    results = (
-        p
-        | 'Create players with goals per season' >> beam.Create([
-            (
-                'Messi', 45
-            ),
-            (
-                'Ronaldo', 46),
-            (
-                'Ronaldo', 41
-            ),
-            (
-                'Ronaldo', 69
-            ),
-            (
-                'Messi', 91
-            ),
-        ])
-        | "Group goals by player" >> beam.CombinePerKey(max)
-        | "Print results" >> beam.Map(print)
-    )
-
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        results = (
+            p
+            | 'Create players with goals per season' >> beam.Create([
+                (
+                    'Messi', 45
+                ),
+                (
+                    'Ronaldo', 46),
+                (
+                    'Ronaldo', 41
+                ),
+                (
+                    'Ronaldo', 69
+                ),
+                (
+                    'Messi', 91
+                ),
+            ])
+            | "Group goals by player" >> beam.CombinePerKey(max)
+            | "Print results" >> beam.Map(print)
+        )

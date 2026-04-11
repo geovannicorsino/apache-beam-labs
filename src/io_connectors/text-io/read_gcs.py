@@ -16,9 +16,10 @@ Example output:
 """
 import apache_beam as beam
 
-with beam.Pipeline() as p:
-    names = (
-        p
-        | "Read from Text File" >> beam.io.ReadFromText("gs://geo-test-labs/data/test/text.txt")
-        | "Print output" >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        names = (
+            p
+            | "Read from Text File" >> beam.io.ReadFromText("gs://geo-test-labs/data/test/text.txt")
+            | "Print output" >> beam.Map(print)
+        )

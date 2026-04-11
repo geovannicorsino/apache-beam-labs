@@ -27,17 +27,18 @@ class SumEvenFn(beam.CombineFn):
         return accumulator
 
 
-with beam.Pipeline() as p:
-    results = (
-        p
-        | 'Numbers' >> beam.Create([
-            1,
-            2,
-            3,
-            4,
-            5
-        ])
-        | "Combine even numbers" >> beam.CombineGlobally(SumEvenFn())
-        | "Print results" >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        results = (
+            p
+            | 'Numbers' >> beam.Create([
+                1,
+                2,
+                3,
+                4,
+                5
+            ])
+            | "Combine even numbers" >> beam.CombineGlobally(SumEvenFn())
+            | "Print results" >> beam.Map(print)
+        )
 

@@ -13,14 +13,15 @@ Example output:
 import apache_beam as beam
 
 
-with beam.Pipeline() as p:
-    result = (
-        p
-        | 'ReadFromBigQuery' >> beam.io.ReadFromBigQuery(
-            table='geovanni-corsino-labs:jaffle_shop.customers',
-            # DIRECT_READ uses the Storage Read API — faster for large tables
-            # EXPORT (default) exports to GCS first, then reads
-            method=beam.io.ReadFromBigQuery.Method.DIRECT_READ,
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        result = (
+            p
+            | 'ReadFromBigQuery' >> beam.io.ReadFromBigQuery(
+                table='geovanni-corsino-labs:jaffle_shop.customers',
+                # DIRECT_READ uses the Storage Read API — faster for large tables
+                # EXPORT (default) exports to GCS first, then reads
+                method=beam.io.ReadFromBigQuery.Method.DIRECT_READ,
+            )
+            | 'PrintOutput' >> beam.Map(print)
         )
-        | 'PrintOutput' >> beam.Map(print)
-    )

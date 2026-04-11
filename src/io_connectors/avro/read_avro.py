@@ -15,9 +15,10 @@ Example output:
 import apache_beam as beam
 from apache_beam.io import ReadFromAvro
 
-with beam.Pipeline() as p:
-    (
-        p
-        | 'ReadFromAvro' >> ReadFromAvro('data/test/people.avro')
-        | 'Print' >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | 'ReadFromAvro' >> ReadFromAvro('data/test/people.avro')
+            | 'Print' >> beam.Map(print)
+        )

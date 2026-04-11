@@ -61,20 +61,21 @@ class RevenueCombineFn(beam.CombineFn):
         }
 
 
-options = PipelineOptions()
-options.view_as(StandardOptions).streaming = True
+if __name__ == '__main__':
+    options = PipelineOptions()
+    options.view_as(StandardOptions).streaming = True
 
-with beam.Pipeline(options=options) as p:
-    (
-        p
-        | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-        | "Parse" >> beam.Map(parse_message)
-        | "Window" >> beam.WindowInto(
-            GlobalWindows(),
-            trigger=Repeatedly(AfterCount(BATCH_SIZE)),
-            accumulation_mode=AccumulationMode.DISCARDING,
-            allowed_lateness=0,
+    with beam.Pipeline(options=options) as p:
+        (
+            p
+            | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+            | "Parse" >> beam.Map(parse_message)
+            | "Window" >> beam.WindowInto(
+                GlobalWindows(),
+                trigger=Repeatedly(AfterCount(BATCH_SIZE)),
+                accumulation_mode=AccumulationMode.DISCARDING,
+                allowed_lateness=0,
+            )
+            | "Combine" >> beam.CombineGlobally(RevenueCombineFn()).without_defaults()
+            | "Print" >> beam.Map(print_result)
         )
-        | "Combine" >> beam.CombineGlobally(RevenueCombineFn()).without_defaults()
-        | "Print" >> beam.Map(print_result)
-    )

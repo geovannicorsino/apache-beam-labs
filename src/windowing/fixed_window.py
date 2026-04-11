@@ -68,15 +68,16 @@ def print_metrics(element):
     return element
 
 
-options = PipelineOptions()
-options.view_as(StandardOptions).streaming = True
+if __name__ == '__main__':
+    options = PipelineOptions()
+    options.view_as(StandardOptions).streaming = True
 
-with beam.Pipeline(options=options) as p:
-    (
-        p
-        | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-        | "Parse" >> beam.Map(parse_message)
-        | "Window" >> beam.WindowInto(FixedWindows(WINDOW_SIZE_SECONDS))
-        | "Combine" >> beam.CombineGlobally(MetricsCombineFn()).without_defaults()
-        | "Print" >> beam.Map(print_metrics)
-    )
+    with beam.Pipeline(options=options) as p:
+        (
+            p
+            | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+            | "Parse" >> beam.Map(parse_message)
+            | "Window" >> beam.WindowInto(FixedWindows(WINDOW_SIZE_SECONDS))
+            | "Combine" >> beam.CombineGlobally(MetricsCombineFn()).without_defaults()
+            | "Print" >> beam.Map(print_metrics)
+        )

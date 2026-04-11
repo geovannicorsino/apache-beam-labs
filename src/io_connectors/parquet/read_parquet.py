@@ -16,11 +16,12 @@ Example output:
 import apache_beam as beam
 from apache_beam.io import ReadFromParquet
 
-with beam.Pipeline() as p:
-    (
-        p
-        | 'ReadFromParquet' >> ReadFromParquet(
-            'data/test/people.parquet',            
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        (
+            p
+            | 'ReadFromParquet' >> ReadFromParquet(
+                'data/test/people.parquet',
+            )
+            | 'Print' >> beam.Map(print)
         )
-        | 'Print' >> beam.Map(print)
-    )

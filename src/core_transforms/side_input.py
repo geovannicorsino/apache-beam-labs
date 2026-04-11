@@ -22,24 +22,25 @@ class EnrichDoFn(beam.DoFn):
         yield element
 
 
-employees = [
-    {"name": "Alice", "department": "HR", "salary": 5000},
-    {"name": "Bob", "department": "Engineering", "salary": 8000},
-    {"name": "Charlie", "department": "HR", "salary": 6000},
-]
+if __name__ == '__main__':
+    employees = [
+        {"name": "Alice", "department": "HR", "salary": 5000},
+        {"name": "Bob", "department": "Engineering", "salary": 8000},
+        {"name": "Charlie", "department": "HR", "salary": 6000},
+    ]
 
-with beam.Pipeline() as p:
+    with beam.Pipeline() as p:
 
-    employees_pc = p | "Employees" >> beam.Create(employees)
+        employees_pc = p | "Employees" >> beam.Create(employees)
 
-    avg_salary = (
-        employees_pc
-        | "Extract salary" >> beam.Map(lambda e: e["salary"])
-        | "Avg salary" >> beam.CombineGlobally(beam.combiners.MeanCombineFn())
-    )
+        avg_salary = (
+            employees_pc
+            | "Extract salary" >> beam.Map(lambda e: e["salary"])
+            | "Avg salary" >> beam.CombineGlobally(beam.combiners.MeanCombineFn())
+        )
 
-    result = (
-        employees_pc
-        | "Enrich" >> beam.ParDo(EnrichDoFn(), avg_salary=beam.pvalue.AsSingleton(avg_salary))
-        | beam.Map(print)
-    )
+        result = (
+            employees_pc
+            | "Enrich" >> beam.ParDo(EnrichDoFn(), avg_salary=beam.pvalue.AsSingleton(avg_salary))
+            | beam.Map(print)
+        )

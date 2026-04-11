@@ -54,31 +54,32 @@ class ParseAndValidateDoFn(beam.DoFn):
             })
 
 
-raw_events = [
-    '{"order_id": "001", "amount": 99.5}',
-    'this is not json at all',
-    '{"order_id": "003", "amount": 210.0}',
-    '{"order_id": "004"}',   # missing 'amount'
-    '{"amount": 55.0}',      # missing 'order_id'
-]
+if __name__ == '__main__':
+    raw_events = [
+        '{"order_id": "001", "amount": 99.5}',
+        'this is not json at all',
+        '{"order_id": "003", "amount": 210.0}',
+        '{"order_id": "004"}',   # missing 'amount'
+        '{"amount": 55.0}',      # missing 'order_id'
+    ]
 
-with beam.Pipeline() as p:
-    results = (
-        p
-        | "Read" >> beam.Create(raw_events)
-        | "Parse" >> beam.ParDo(ParseAndValidateDoFn()).with_outputs(
-            VALID, DEAD_LETTER
+    with beam.Pipeline() as p:
+        results = (
+            p
+            | "Read" >> beam.Create(raw_events)
+            | "Parse" >> beam.ParDo(ParseAndValidateDoFn()).with_outputs(
+                VALID, DEAD_LETTER
+            )
         )
-    )
 
-    valid = results[VALID]
-    dead_letter = results[DEAD_LETTER]
+        valid = results[VALID]
+        dead_letter = results[DEAD_LETTER]
 
-    valid | "Print Valid" >> beam.Map(
-        lambda x: print(f"VALID: {x}")
-    )
+        valid | "Print Valid" >> beam.Map(
+            lambda x: print(f"VALID: {x}")
+        )
 
-    dead_letter | "Print DLQ" >> beam.Map(
-        lambda x: print(
-            f"INVALID: DLQ | raw: {x['raw']!r:<45} | error: {x['error']}")
-    )
+        dead_letter | "Print DLQ" >> beam.Map(
+            lambda x: print(
+                f"INVALID: DLQ | raw: {x['raw']!r:<45} | error: {x['error']}")
+        )

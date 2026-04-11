@@ -36,17 +36,18 @@ class SumEvenOrOddFn(beam.CombineFn):
         return accumulator
 
 
-with beam.Pipeline() as p:
-    results = (
-        p
-        | 'Numbers' >> beam.Create([
-            ('Ronaldo', 1),
-            ('Messi', 2),
-            ('Messi', 3),
-            ('Neymar', 4),
-            ('Neymar', 5),
-        ])
-        | "Combine by key" >> beam.CombinePerKey(SumEvenOrOddFn())
-        | "Print results" >> beam.Map(print)
-    )
+if __name__ == '__main__':
+    with beam.Pipeline() as p:
+        results = (
+            p
+            | 'Numbers' >> beam.Create([
+                ('Ronaldo', 1),
+                ('Messi', 2),
+                ('Messi', 3),
+                ('Neymar', 4),
+                ('Neymar', 5),
+            ])
+            | "Combine by key" >> beam.CombinePerKey(SumEvenOrOddFn())
+            | "Print results" >> beam.Map(print)
+        )
 

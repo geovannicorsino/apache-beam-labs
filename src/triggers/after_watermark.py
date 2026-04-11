@@ -68,29 +68,30 @@ def print_result(element):
     return element
 
 
-options = PipelineOptions()
-options.view_as(StandardOptions).streaming = True
+if __name__ == '__main__':
+    options = PipelineOptions()
+    options.view_as(StandardOptions).streaming = True
 
-with beam.Pipeline(options=options) as p:
-    (
-        p
-        | "Read"    >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-        | "Parse"   >> beam.Map(parse_message)
-        | "Window"  >> beam.WindowInto(
-            FixedWindows(WINDOW_SIZE_SECONDS),
-            trigger=AfterWatermark(
-                # Fire a preview every 3 events before the window closes
-                early=AfterCount(3),
-                # Fire a correction for every late event that arrives
-                late=AfterCount(1),
-            ),
-            accumulation_mode=AccumulationMode.ACCUMULATING,
-            allowed_lateness=ALLOWED_LATENESS_SECONDS,
-            # OUTPUT_AT_EOW: the output timestamp of each pane is set to the
-            # end of the window, regardless of when individual events arrived.
-            # This makes downstream time-based operations predictable.
-            timestamp_combiner=TimestampCombiner.OUTPUT_AT_EOW,
+    with beam.Pipeline(options=options) as p:
+        (
+            p
+            | "Read"    >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+            | "Parse"   >> beam.Map(parse_message)
+            | "Window"  >> beam.WindowInto(
+                FixedWindows(WINDOW_SIZE_SECONDS),
+                trigger=AfterWatermark(
+                    # Fire a preview every 3 events before the window closes
+                    early=AfterCount(3),
+                    # Fire a correction for every late event that arrives
+                    late=AfterCount(1),
+                ),
+                accumulation_mode=AccumulationMode.ACCUMULATING,
+                allowed_lateness=ALLOWED_LATENESS_SECONDS,
+                # OUTPUT_AT_EOW: the output timestamp of each pane is set to the
+                # end of the window, regardless of when individual events arrived.
+                # This makes downstream time-based operations predictable.
+                timestamp_combiner=TimestampCombiner.OUTPUT_AT_EOW,
+            )
+            | "Combine" >> beam.CombineGlobally(RevenueCombineFn()).without_defaults()
+            | "Print"   >> beam.Map(print_result)
         )
-        | "Combine" >> beam.CombineGlobally(RevenueCombineFn()).without_defaults()
-        | "Print"   >> beam.Map(print_result)
-    )
