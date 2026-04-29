@@ -1,32 +1,52 @@
 [build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "apache-beam-labs"
 version = "0.1.0"
-requires-python = ">=3.12"
-dependencies = [
-    "apache-beam[gcp]==2.71.0"
-]
+requires-python = ">=3.12,<3.13"
+dependencies = ["apache-beam[gcp]==2.71.0"]
 
-[project.optional-dependencies]
-dev = [
-    "pytest==8.3.5",
-    "pytest-cov==5.0.0",
-    "ruff==0.8.0",
-]
+[dependency-groups]
+dev = ["pytest==8.3.5", "pytest-cov==5.0.0", "ruff==0.8.0"]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["src*"]
+[tool.uv]
+prerelease = "allow"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+exclude = [".specify", ".venv", "main.py"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "W", "UP"]
+select = [
+    "E",     # pycodestyle errors
+    "F",     # pyflakes
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "B",     # bugbear
+    "S",     # bandit (segurança)
+    "C90",   # mccabe complexity
+    "PT",    # pytest style
+    "ASYNC", # async best practices
+    "SIM",   # simplify
+    "RUF",   # ruff extras
+]
+ignore = [
+    "S105", # false positive — flags URL constants and mock path strings as hardcoded passwords
+    "B008", # beam.DoFn.WindowParam / StateParam as default args is the standard Beam pattern
+    "N999", # intentionally-numbered challenge files (e.g. 1_challenge.py)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101", # assert is the standard pytest assertion pattern
+    "S106", # false positive — test fixtures use literal credential strings
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

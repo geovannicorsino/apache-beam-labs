@@ -17,8 +17,8 @@ import apache_beam as beam
 from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.util import assert_that, equal_to, is_empty
 
+from src.advanced_transforms.dead_letter_queue import DEAD_LETTER, VALID, ParseAndValidateDoFn
 from src.core_transforms.additional_outputs import RouteRecords
-from src.advanced_transforms.dead_letter_queue import ParseAndValidateDoFn, VALID, DEAD_LETTER
 
 
 class TestRouteRecords(unittest.TestCase):

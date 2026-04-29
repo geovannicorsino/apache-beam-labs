@@ -11,13 +11,15 @@ Example output:
 """
 import apache_beam as beam
 
-
 if __name__ == '__main__':
     with beam.Pipeline() as p:
         result = (
             p
             | 'ReadFromBigQuery' >> beam.io.ReadFromBigQuery(
-                query='SELECT ID, FIRST_NAME FROM `geovanni-corsino-labs.jaffle_shop.customers` LIMIT 10',
+                query=(
+                    'SELECT ID, FIRST_NAME '
+                    'FROM `geovanni-corsino-labs.jaffle_shop.customers` LIMIT 10'
+                ),
                 use_standard_sql=True,
                 project='geovanni-corsino-labs',
                 # GCS bucket used as temp storage during query export

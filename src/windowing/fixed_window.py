@@ -11,8 +11,8 @@ Example input:
     {"latency_ms": 543, "status": 500}
 
 Example output:
-  [14:00–14:01] requests: 3 | avg_latency: 145.0ms | errors: 1
-  [14:01–14:02] requests: 2 | avg_latency: 112.5ms | errors: 0
+  [14:00-14:01] requests: 3 | avg_latency: 145.0ms | errors: 1
+  [14:01-14:02] requests: 2 | avg_latency: 112.5ms | errors: 0
 '''
 import json
 

@@ -67,7 +67,9 @@ if __name__ == '__main__':
             p
             | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
             | "Parse" >> beam.Map(parse_message)
-            | "Window" >> beam.WindowInto(SlidingWindows(WINDOW_SIZE_SECONDS, WINDOW_PERIOD_SECONDS))
+            | "Window" >> beam.WindowInto(
+                SlidingWindows(WINDOW_SIZE_SECONDS, WINDOW_PERIOD_SECONDS)
+            )
             | "Combine" >> beam.CombineGlobally(AvgLatencyCombineFn()).without_defaults()
             | "Print" >> beam.Map(print_avg)
         )

@@ -7,12 +7,14 @@ Use it when different subsets of your data require different processing logic ap
 Example input:
     [{'name': 'Alice', 'tier': 'gold', ...}, {'name': 'Bob', 'tier': 'bronze', ...}, ...]
 Example output:
-    bronze partition: {'id': 2, 'name': 'Bob',   'tier': 'bronze', 'spent': 200,   'discount': 0.05}
-    silver partition: {'id': 3, 'name': 'Carol',  'tier': 'silver', 'spent': 1500,  'discount': 0.10}
-    gold   partition: {'id': 1, 'name': 'Alice',  'tier': 'gold',   'spent': 9500,  'discount': 0.20}
+    bronze partition: {'id': 2, 'name': 'Bob',   'tier': 'bronze', 'spent': 200,
+                       'discount': 0.05}
+    silver partition: {'id': 3, 'name': 'Carol',  'tier': 'silver', 'spent': 1500,
+                       'discount': 0.10}
+    gold   partition: {'id': 1, 'name': 'Alice',  'tier': 'gold',   'spent': 9500,
+                       'discount': 0.20}
 """
 import apache_beam as beam
-
 
 PARTITIONS = ["bronze", "silver", "gold"]
 

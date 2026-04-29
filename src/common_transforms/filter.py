@@ -6,7 +6,8 @@ Use it to exclude invalid, out-of-range, or unwanted records from a pipeline.
 Side inputs (e.g., AsIter) let the predicate reference a dynamic allowlist computed at runtime.
 
 Example input:
-    [{'name': 'Strawberry', 'duration': 'perennial'}, {'name': 'Potato', 'duration': 'PERENNIAL'}, ...]
+    [{'name': 'Strawberry', 'duration': 'perennial'},
+     {'name': 'Potato', 'duration': 'PERENNIAL'}, ...]
 Example output:
     {'name': 'Strawberry', 'duration': 'perennial'}
     {'name': 'Carrot', 'duration': 'biennial'}
@@ -42,6 +43,7 @@ if __name__ == '__main__':
                 },
             ])
             | 'Filter valid plants' >> beam.Filter(
-                lambda element, valid_durations: element['duration'] in valid_durations, valid_durations=beam.pvalue.AsIter(valid_durations),
+                lambda element, valid_durations: element['duration'] in valid_durations,
+                valid_durations=beam.pvalue.AsIter(valid_durations),
             )
             | beam.Map(print))

@@ -1,5 +1,6 @@
 """
-Additional Outputs (Tagged Outputs) | Route elements to multiple named output PCollections from a single DoFn.
+Additional Outputs (Tagged Outputs) | Route elements to multiple named output PCollections
+from a single DoFn.
 
 Use TaggedOutput inside process() to label each emitted element with a tag, then access each
 named stream via results[tag] after calling with_outputs().
@@ -46,6 +47,6 @@ if __name__ == '__main__':
             )
         )
 
-        results["valid"]       | "Write Valid"       >> beam.Map(lambda x: print(f"Write Valid: {x}"))
-        results["invalid"]     | "Write Invalid"     >> beam.Map(lambda x: print(f"Write Invalid: {x}"))
-        results["dead_letter"] | "Write Dead Letter" >> beam.Map(lambda x: print(f"Write Dead Letter: {x}"))
+        results["valid"]       | "Write Valid"       >> beam.Map(lambda x: print(f"Valid: {x}"))
+        results["invalid"]     | "Write Invalid"     >> beam.Map(lambda x: print(f"Invalid: {x}"))
+        results["dead_letter"] | "Write Dead Letter" >> beam.Map(lambda x: print(f"DLQ: {x}"))

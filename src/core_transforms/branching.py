@@ -37,6 +37,8 @@ if __name__ == '__main__':
 
         engineering_team = (
             input_employees
-            | "Filter Engineering Employees" >> beam.Filter(lambda emp: emp["department"] == "Engineering")
+            | "Filter Engineering Employees" >> beam.Filter(
+                lambda emp: emp["department"] == "Engineering"
+            )
             | "Print Engineering Employees" >> beam.Map(print_element)
         )

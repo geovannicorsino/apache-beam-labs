@@ -22,7 +22,12 @@ import json
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, StandardOptions
-from apache_beam.transforms.trigger import AccumulationMode, AfterCount, AfterWatermark, TimestampCombiner
+from apache_beam.transforms.trigger import (
+    AccumulationMode,
+    AfterCount,
+    AfterWatermark,
+    TimestampCombiner,
+)
 from apache_beam.transforms.window import FixedWindows
 
 PROJECT = "geovanni-corsino-labs"

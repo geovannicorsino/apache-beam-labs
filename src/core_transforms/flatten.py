@@ -1,7 +1,8 @@
 """
 Flatten | Merge multiple PCollections of the same type into one PCollection.
 
-Acts as the inverse of branching: multiple independent streams are reunited into a single collection.
+Acts as the inverse of branching: multiple independent streams are reunited into a single
+collection.
 Use it after processing branches separately when you need to apply a unified downstream transform.
 
 Example input:
@@ -13,7 +14,6 @@ Example output:
     {'name': 'Bob', 'department': 'Engineering'}
 """
 import apache_beam as beam
-
 
 if __name__ == '__main__':
     with beam.Pipeline() as p:
@@ -32,7 +32,9 @@ if __name__ == '__main__':
 
         engineering_team = (
             input_employees
-            | "Filter Engineering Employees" >> beam.Filter(lambda emp: emp["department"] == "Engineering")
+            | "Filter Engineering Employees" >> beam.Filter(
+                lambda emp: emp["department"] == "Engineering"
+            )
         )
 
         all_employees = (

@@ -12,7 +12,6 @@ Example output:
 """
 import apache_beam as beam
 
-
 if __name__ == '__main__':
     with beam.Pipeline() as p:
         result = (

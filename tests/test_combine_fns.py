@@ -19,8 +19,8 @@ import apache_beam as beam
 from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.util import assert_that, equal_to
 
-from src.core_transforms.combine.combine_fn import SumEvenFn
 from src.core_transforms.combine.combine_by_key import SumEvenOrOddFn
+from src.core_transforms.combine.combine_fn import SumEvenFn
 
 
 class TestSumEvenFn(unittest.TestCase):

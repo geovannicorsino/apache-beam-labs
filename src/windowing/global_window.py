@@ -16,7 +16,6 @@ from apache_beam.options.pipeline_options import PipelineOptions, StandardOption
 from apache_beam.transforms.trigger import AccumulationMode, AfterCount, Repeatedly
 from apache_beam.transforms.window import GlobalWindows
 
-
 PROJECT = "geovanni-corsino-labs"
 SUBSCRIPTION = f"projects/{PROJECT}/subscriptions/event-topic-sub"
 

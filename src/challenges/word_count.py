@@ -12,9 +12,9 @@ Example output:
     ('world', 1)
     ('beam', 1)
 """
-import apache_beam as beam
 import re
 
+import apache_beam as beam
 
 INPUT_FILE = 'data/data.txt'
 

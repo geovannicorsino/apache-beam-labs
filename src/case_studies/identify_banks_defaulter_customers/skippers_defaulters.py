@@ -2,9 +2,12 @@
 Case Study - Identify Bank's Defaulter Customers
 Credit card skippers/defaulters:
 
- --> Assign 1 point to customer for short payment, where a short payment means when customer fails to clear atleast 70% of its monthly spends.
- --> Assign 1 point to customer where he has spent 100% of his max_limit but did not clear the full amount.
- --> If for any month customer is meeting both the above conditions,assign 1 additional point.
+ --> Assign 1 point to customer for short payment, where a short payment means when
+     customer fails to clear atleast 70% of its monthly spends.
+ --> Assign 1 point to customer where he has spent 100% of his max_limit but did not
+     clear the full amount.
+ --> If for any month customer is meeting both the above conditions, assign 1 additional
+     point.
  --> Sum up all the points for a customer and output in file.
 """
 import apache_beam as beam

@@ -2,12 +2,14 @@
 
 You are provided with a PCollection created from the array of taxi order prices in a csv file.
 Your task is to find how many orders are below $15 and how many are equal to or above $15.
-Return it as a map structure (key-value), make above or below the key, and the total dollar value (sum) of orders - the value.
+Return it as a map structure (key-value), make above or below the key, and the total dollar
+value (sum) of orders - the value.
 Although there are many ways to do this, try using another transformation presented in this module.
 '''
-from typing import Dict, List, Any
-import apache_beam as beam
 import csv
+from typing import Any
+
+import apache_beam as beam
 
 CSV_PATH = 'data/challenge/sample1000.csv'
 
@@ -32,7 +34,7 @@ SCHEMA = {
 }
 
 
-def get_header(path: str) -> List[str]:
+def get_header(path: str) -> list[str]:
     """
     Get the header of a csv file as a list of strings
 
@@ -47,7 +49,7 @@ def get_header(path: str) -> List[str]:
     return next(csv.reader([first_line]))
 
 
-def parse_row(line: str, fields: List[str], schema: Dict) -> Dict[str, Any]:
+def parse_row(line: str, fields: list[str], schema: dict) -> dict[str, Any]:
     """
     Parse a line of a csv file into a dictionary, using the provided fields and schema
 
@@ -57,12 +59,13 @@ def parse_row(line: str, fields: List[str], schema: Dict) -> Dict[str, Any]:
         schema (Dict): Dictionary mapping column names to their expected types
 
     Returns:
-        Dict[str, Any]: A dictionary representing the parsed line, with keys as column names and values as the parsed values according to the schema
+        Dict[str, Any]: A dictionary representing the parsed line, with keys as column
+        names and values as the parsed values according to the schema
     """
     values = next(csv.reader([line]))
     return {
         key: schema[key](value) if key in schema else value
-        for key, value in zip(fields, values)
+        for key, value in zip(fields, values, strict=False)
     }
 
 
@@ -71,7 +74,9 @@ if __name__ == '__main__':
         taxi_orders = (
             p
             | 'Read Taxi Orders' >> beam.io.ReadFromText(CSV_PATH, skip_header_lines=1)
-            | 'Split Line to Dict' >> beam.Map(parse_row, fields=get_header(CSV_PATH), schema=SCHEMA)
+            | 'Split Line to Dict' >> beam.Map(
+                parse_row, fields=get_header(CSV_PATH), schema=SCHEMA
+            )
             | 'Key by threshold' >> beam.Map(
                 lambda x: ("below" if x["total_amount"] <
                            15 else "above", x["total_amount"])
