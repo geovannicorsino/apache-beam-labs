@@ -18,16 +18,17 @@ Example input:
 Example output:
     2, 4, 6, 8, 10, 12, 14, 16, 18, 20  (order may vary — different workers)
 """
+
 import apache_beam as beam
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         (
             p
-            | 'Create' >> beam.Create(list(range(1, 11)))
+            | "Create" >> beam.Create(list(range(1, 11)))
             # Without Reshuffle, all elements stay on the same worker after Create.
             # Reshuffle redistributes them so the heavy Map below can run in parallel.
-            | 'Reshuffle' >> beam.Reshuffle()
-            | 'Double' >> beam.Map(lambda x: x * 2)
-            | 'Print' >> beam.Map(print)
+            | "Reshuffle" >> beam.Reshuffle()
+            | "Double" >> beam.Map(lambda x: x * 2)
+            | "Print" >> beam.Map(print)
         )

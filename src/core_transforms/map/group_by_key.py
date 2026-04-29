@@ -12,18 +12,14 @@ Example output:
     ('apple', 5)
     ('lemon', 5)
 """
+
 import apache_beam as beam
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
-        input = p | 'Fruits' >> beam.Create([
-            ("banana", 2),
-            ("apple", 4),
-            ("lemon", 3),
-            ("Apple", 1),
-            ("Banana", 5),
-            ("Lemon", 2)
-        ])
+        input = p | "Fruits" >> beam.Create(
+            [("banana", 2), ("apple", 4), ("lemon", 3), ("Apple", 1), ("Banana", 5), ("Lemon", 2)]
+        )
 
         ret = (
             input

@@ -12,6 +12,7 @@ Example input:
 Example output:
     total_orders: 3 | revenue: R$ 100.00
 """
+
 import json
 
 import apache_beam as beam
@@ -31,10 +32,7 @@ def parse_message(message):
 
 
 def print_result(element):
-    print(
-        f"total_orders: {element['total_orders']} | "
-        f"revenue: R$ {element['revenue']:.2f}"
-    )
+    print(f"total_orders: {element['total_orders']} | " f"revenue: R$ {element['revenue']:.2f}")
     return element
 
 
@@ -61,7 +59,7 @@ class RevenueCombineFn(beam.CombineFn):
         }
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 
@@ -70,7 +68,8 @@ if __name__ == '__main__':
             p
             | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
             | "Parse" >> beam.Map(parse_message)
-            | "Window" >> beam.WindowInto(
+            | "Window"
+            >> beam.WindowInto(
                 GlobalWindows(),
                 trigger=Repeatedly(AfterCount(BATCH_SIZE)),
                 accumulation_mode=AccumulationMode.DISCARDING,

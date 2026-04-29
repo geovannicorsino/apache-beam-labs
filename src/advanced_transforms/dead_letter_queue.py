@@ -30,6 +30,7 @@ Example output (dead letter):
     DLQ | raw: '{"order_id": "004"}'      | error: 'amount'
     DLQ | raw: '{"amount": 55.0}'         | error: 'order_id'
 """
+
 import json
 
 import apache_beam as beam
@@ -48,38 +49,36 @@ class ParseAndValidateDoFn(beam.DoFn):
             _ = record["amount"]
             yield pvalue.TaggedOutput(VALID, record)
         except (json.JSONDecodeError, KeyError) as e:
-            yield pvalue.TaggedOutput(DEAD_LETTER, {
-                "raw": element,
-                "error": str(e),
-            })
+            yield pvalue.TaggedOutput(
+                DEAD_LETTER,
+                {
+                    "raw": element,
+                    "error": str(e),
+                },
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     raw_events = [
         '{"order_id": "001", "amount": 99.5}',
-        'this is not json at all',
+        "this is not json at all",
         '{"order_id": "003", "amount": 210.0}',
-        '{"order_id": "004"}',   # missing 'amount'
-        '{"amount": 55.0}',      # missing 'order_id'
+        '{"order_id": "004"}',  # missing 'amount'
+        '{"amount": 55.0}',  # missing 'order_id'
     ]
 
     with beam.Pipeline() as p:
         results = (
             p
             | "Read" >> beam.Create(raw_events)
-            | "Parse" >> beam.ParDo(ParseAndValidateDoFn()).with_outputs(
-                VALID, DEAD_LETTER
-            )
+            | "Parse" >> beam.ParDo(ParseAndValidateDoFn()).with_outputs(VALID, DEAD_LETTER)
         )
 
         valid = results[VALID]
         dead_letter = results[DEAD_LETTER]
 
-        valid | "Print Valid" >> beam.Map(
-            lambda x: print(f"VALID: {x}")
-        )
+        valid | "Print Valid" >> beam.Map(lambda x: print(f"VALID: {x}"))
 
         dead_letter | "Print DLQ" >> beam.Map(
-            lambda x: print(
-                f"INVALID: DLQ | raw: {x['raw']!r:<45} | error: {x['error']}")
+            lambda x: print(f"INVALID: DLQ | raw: {x['raw']!r:<45} | error: {x['error']}")
         )

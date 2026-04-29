@@ -14,9 +14,10 @@ Example output:
     Bob
     Charlie
 """
+
 import apache_beam as beam
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         names = (
             p

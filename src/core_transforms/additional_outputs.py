@@ -13,6 +13,7 @@ Example output:
     invalid:      {'id': 2, 'value': -5}
     dead_letter:  {'id': 3, 'value': None}
 """
+
 import apache_beam as beam
 from apache_beam.pvalue import TaggedOutput
 
@@ -30,23 +31,20 @@ class RouteRecords(beam.DoFn):
             yield TaggedOutput("dead_letter", {**element, "_error": str(e)})
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
-        records = p | beam.Create([
-            {"id": 1, "value": 10},
-            {"id": 2, "value": -5},
-            {"id": 3, "value": None},
-        ])
-
-        results = (
-            records
-            | "Route" >> beam.ParDo(RouteRecords()).with_outputs(
-                "invalid",
-                "dead_letter",
-                main="valid"
-            )
+        records = p | beam.Create(
+            [
+                {"id": 1, "value": 10},
+                {"id": 2, "value": -5},
+                {"id": 3, "value": None},
+            ]
         )
 
-        results["valid"]       | "Write Valid"       >> beam.Map(lambda x: print(f"Valid: {x}"))
-        results["invalid"]     | "Write Invalid"     >> beam.Map(lambda x: print(f"Invalid: {x}"))
+        results = records | "Route" >> beam.ParDo(RouteRecords()).with_outputs(
+            "invalid", "dead_letter", main="valid"
+        )
+
+        results["valid"] | "Write Valid" >> beam.Map(lambda x: print(f"Valid: {x}"))
+        results["invalid"] | "Write Invalid" >> beam.Map(lambda x: print(f"Invalid: {x}"))
         results["dead_letter"] | "Write Dead Letter" >> beam.Map(lambda x: print(f"DLQ: {x}"))

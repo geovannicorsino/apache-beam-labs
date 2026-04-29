@@ -13,6 +13,7 @@ Example output:
     {'name': 'Bob',   'salary': 8000, 'above_avg': True}
     {'name': 'Charlie','salary': 6000,'above_avg': False}
 """
+
 import apache_beam as beam
 
 
@@ -22,7 +23,7 @@ class EnrichDoFn(beam.DoFn):
         yield element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     employees = [
         {"name": "Alice", "department": "HR", "salary": 5000},
         {"name": "Bob", "department": "Engineering", "salary": 8000},
@@ -30,7 +31,6 @@ if __name__ == '__main__':
     ]
 
     with beam.Pipeline() as p:
-
         employees_pc = p | "Employees" >> beam.Create(employees)
 
         avg_salary = (

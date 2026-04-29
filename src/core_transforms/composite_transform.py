@@ -14,6 +14,7 @@ Example output:
     {'name': 'DAVE',  'department': 'Engineering', 'salary': 8000, 'tax': 1600.0}
     {'name': 'EVE',   'department': 'Engineering', 'salary': 9000, 'tax': 1800.0}
 """
+
 import apache_beam as beam
 
 
@@ -32,19 +33,19 @@ class ProcessEmployees(beam.PTransform):
 
 
 employees = [
-    {"name": "Alice",   "department": "HR",          "salary": 5000},
-    {"name": "  Bob ",  "department": "HR",          "salary": 6000},
-    {"name": "Charlie", "department": "HR",          "salary": -100},
+    {"name": "Alice", "department": "HR", "salary": 5000},
+    {"name": "  Bob ", "department": "HR", "salary": 6000},
+    {"name": "Charlie", "department": "HR", "salary": -100},
 ]
 
 contractors = [
-    {"name": "Dave",  "department": "Engineering", "salary": 8000},
+    {"name": "Dave", "department": "Engineering", "salary": 8000},
     {"name": "Eve  ", "department": "Engineering", "salary": 9000},
-    {"name": "",      "department": "Engineering", "salary": 0},
+    {"name": "", "department": "Engineering", "salary": 0},
 ]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         rh_processed = (
             p

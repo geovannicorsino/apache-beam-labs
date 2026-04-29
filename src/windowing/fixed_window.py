@@ -1,4 +1,4 @@
-'''
+"""
 Fixed Windowing | System Metrics per Minute
 
 Each 60-second window emits:
@@ -13,7 +13,8 @@ Example input:
 Example output:
   [14:00-14:01] requests: 3 | avg_latency: 145.0ms | errors: 1
   [14:01-14:02] requests: 2 | avg_latency: 112.5ms | errors: 0
-'''
+"""
+
 import json
 
 import apache_beam as beam
@@ -45,8 +46,7 @@ class MetricsCombineFn(beam.CombineFn):
         return merged
 
     def extract_output(self, acc):
-        avg_latency = acc["total_latency"] / \
-            acc["requests"] if acc["requests"] else 0
+        avg_latency = acc["total_latency"] / acc["requests"] if acc["requests"] else 0
         return {
             "requests": acc["requests"],
             "avg_latency": round(avg_latency, 1),
@@ -68,7 +68,7 @@ def print_metrics(element):
     return element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 

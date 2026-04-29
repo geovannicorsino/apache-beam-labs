@@ -11,6 +11,7 @@ Example output:
                         {'name': 'Charlie', 'department': 'HR'}
     Engineering branch: {'name': 'Bob', 'department': 'Engineering'}
 """
+
 import apache_beam as beam
 
 
@@ -19,14 +20,14 @@ def print_element(element):
     return element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
-        input_employees = (
-            p
-            | "Create a list of employees" >> beam.Create([{"name": "Alice", "department": "HR"},
-                                                           {"name": "Bob",
-                                                            "department": "Engineering"},
-                                                           {"name": "Charlie", "department": "HR"}])
+        input_employees = p | "Create a list of employees" >> beam.Create(
+            [
+                {"name": "Alice", "department": "HR"},
+                {"name": "Bob", "department": "Engineering"},
+                {"name": "Charlie", "department": "HR"},
+            ]
         )
 
         hr_team = (
@@ -37,8 +38,7 @@ if __name__ == '__main__':
 
         engineering_team = (
             input_employees
-            | "Filter Engineering Employees" >> beam.Filter(
-                lambda emp: emp["department"] == "Engineering"
-            )
+            | "Filter Engineering Employees"
+            >> beam.Filter(lambda emp: emp["department"] == "Engineering")
             | "Print Engineering Employees" >> beam.Map(print_element)
         )

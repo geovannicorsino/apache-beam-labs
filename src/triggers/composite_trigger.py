@@ -12,6 +12,7 @@ Example output (AfterFirst — fired by AfterCount, 5 orders arrived before 10s)
 Example output (AfterFirst — fired by AfterProcessingTime, only 2 orders in 10s):
     total_orders: 2 | revenue: R$ 90.00
 """
+
 import json
 
 import apache_beam as beam
@@ -57,10 +58,7 @@ def parse_message(message):
 
 
 def print_result(element):
-    print(
-        f"total_orders: {element['total_orders']} | "
-        f"revenue: R$ {element['revenue']:.2f}"
-    )
+    print(f"total_orders: {element['total_orders']} | " f"revenue: R$ {element['revenue']:.2f}")
     return element
 
 
@@ -73,21 +71,22 @@ trigger = Repeatedly(
 )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 
     with beam.Pipeline(options=options) as p:
         (
             p
-            | "Read"    >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-            | "Parse"   >> beam.Map(parse_message)
-            | "Window"  >> beam.WindowInto(
+            | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+            | "Parse" >> beam.Map(parse_message)
+            | "Window"
+            >> beam.WindowInto(
                 GlobalWindows(),
                 trigger=trigger,
                 accumulation_mode=AccumulationMode.DISCARDING,
                 allowed_lateness=0,
             )
             | "Combine" >> beam.CombineGlobally(RevenueCombineFn()).without_defaults()
-            | "Print"   >> beam.Map(print_result)
+            | "Print" >> beam.Map(print_result)
         )

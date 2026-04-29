@@ -1,4 +1,4 @@
-'''
+"""
 Sliding Windowing | Rolling Average Latency
 
 Window size:   2 minutes  (how far back we look)
@@ -12,7 +12,8 @@ Example input:
 Example output:
   [SlidingWindow] avg_latency: 145.0ms (last 2 min)
   [SlidingWindow] avg_latency: 132.0ms (last 2 min)
-'''
+"""
+
 import json
 
 import apache_beam as beam
@@ -58,7 +59,7 @@ def print_avg(element):
     return element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 
@@ -67,9 +68,8 @@ if __name__ == '__main__':
             p
             | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
             | "Parse" >> beam.Map(parse_message)
-            | "Window" >> beam.WindowInto(
-                SlidingWindows(WINDOW_SIZE_SECONDS, WINDOW_PERIOD_SECONDS)
-            )
+            | "Window"
+            >> beam.WindowInto(SlidingWindows(WINDOW_SIZE_SECONDS, WINDOW_PERIOD_SECONDS))
             | "Combine" >> beam.CombineGlobally(AvgLatencyCombineFn()).without_defaults()
             | "Print" >> beam.Map(print_avg)
         )

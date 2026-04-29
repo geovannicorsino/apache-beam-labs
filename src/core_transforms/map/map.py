@@ -14,6 +14,7 @@ Example output:
     Hello, Bob Johnson!
     ...
 """
+
 import apache_beam as beam
 
 
@@ -22,7 +23,7 @@ def print_element(element):
     return element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         names_data = [("Alice", "Smith"), ("Bob", "Johnson"), ("Charlie", "Brown")]
         names = (

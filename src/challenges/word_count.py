@@ -12,18 +12,19 @@ Example output:
     ('world', 1)
     ('beam', 1)
 """
+
 import re
 
 import apache_beam as beam
 
-INPUT_FILE = 'data/data.txt'
+INPUT_FILE = "data/data.txt"
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         word_counts = (
             p
-            | 'Read' >> beam.io.ReadFromText(INPUT_FILE)
-            | 'Split' >> beam.FlatMap(lambda line: re.findall(r'\w+', line.lower()))
-            | 'Count' >> beam.combiners.Count.PerElement()
-            | 'Print' >> beam.Map(print)
+            | "Read" >> beam.io.ReadFromText(INPUT_FILE)
+            | "Split" >> beam.FlatMap(lambda line: re.findall(r"\w+", line.lower()))
+            | "Count" >> beam.combiners.Count.PerElement()
+            | "Print" >> beam.Map(print)
         )

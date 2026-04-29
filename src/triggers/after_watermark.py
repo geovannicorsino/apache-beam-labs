@@ -18,6 +18,7 @@ Example output:
     [ON-TIME] total_orders: 5 | revenue: R$ 480.00
     [LATE]    total_orders: 6 | revenue: R$ 530.00  ← late order arrived
 """
+
 import json
 
 import apache_beam as beam
@@ -66,23 +67,21 @@ def parse_message(message):
 
 
 def print_result(element):
-    print(
-        f"total_orders: {element['total_orders']} | "
-        f"revenue: R$ {element['revenue']:.2f}"
-    )
+    print(f"total_orders: {element['total_orders']} | " f"revenue: R$ {element['revenue']:.2f}")
     return element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 
     with beam.Pipeline(options=options) as p:
         (
             p
-            | "Read"    >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
-            | "Parse"   >> beam.Map(parse_message)
-            | "Window"  >> beam.WindowInto(
+            | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
+            | "Parse" >> beam.Map(parse_message)
+            | "Window"
+            >> beam.WindowInto(
                 FixedWindows(WINDOW_SIZE_SECONDS),
                 trigger=AfterWatermark(
                     # Fire a preview every 3 events before the window closes
@@ -98,5 +97,5 @@ if __name__ == '__main__':
                 timestamp_combiner=TimestampCombiner.OUTPUT_AT_EOW,
             )
             | "Combine" >> beam.CombineGlobally(RevenueCombineFn()).without_defaults()
-            | "Print"   >> beam.Map(print_result)
+            | "Print" >> beam.Map(print_result)
         )

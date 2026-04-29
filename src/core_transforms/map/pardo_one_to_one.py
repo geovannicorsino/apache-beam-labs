@@ -15,6 +15,7 @@ Example output:
     40
     50
 """
+
 import apache_beam as beam
 
 
@@ -23,9 +24,6 @@ class MultiplyByTenDoFn(beam.DoFn):
         yield element * 10
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
-        (p | beam.Create([1, 2, 3, 4, 5])
-           | beam.ParDo(MultiplyByTenDoFn())
-           | beam.Map(print)
-         )
+        (p | beam.Create([1, 2, 3, 4, 5]) | beam.ParDo(MultiplyByTenDoFn()) | beam.Map(print))

@@ -12,13 +12,10 @@ Example output:
     {'id': 2, 'name': 'Bob',   'age': 25}
     {'id': 3, 'name': 'Carol', 'age': 35}
 """
+
 import apache_beam as beam
 from apache_beam.io import ReadFromAvro
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
-        (
-            p
-            | 'ReadFromAvro' >> ReadFromAvro('data/test/people.avro')
-            | 'Print' >> beam.Map(print)
-        )
+        (p | "ReadFromAvro" >> ReadFromAvro("data/test/people.avro") | "Print" >> beam.Map(print))

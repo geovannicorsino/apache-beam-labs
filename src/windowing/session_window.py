@@ -1,4 +1,4 @@
-'''
+"""
 Session Windowing | User Session Analytics
 
 Gap duration: 30 seconds (if no events arrive within 30s, the session closes)
@@ -14,7 +14,8 @@ Example input:
 
 Example output:
   [Session] alice | pages: ["/home", "/products", "/cart"] | duration: 45s
-'''
+"""
+
 import json
 
 import apache_beam as beam
@@ -49,11 +50,7 @@ class PrintSessionDoFn(beam.DoFn):
     def process(self, element, window=beam.DoFn.WindowParam):
         user_id, pages = element
         duration = round((window.end - window.start).micros / 1e6, 1)
-        print(
-            f"[Session] {user_id} | "
-            f"pages: {pages} | "
-            f"duration: {duration}s"
-        )
+        print(f"[Session] {user_id} | " f"pages: {pages} | " f"duration: {duration}s")
         yield element
 
 
@@ -61,7 +58,7 @@ def parse_message(message):
     return json.loads(message.decode("utf-8"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 

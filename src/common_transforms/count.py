@@ -13,22 +13,15 @@ Example output:
     ('Ronaldo', 1)
     ('Messi', 1)
 """
+
 import apache_beam as beam
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         name_appearances = (
-            p |
-            'Create Names' >> beam.Create([
-                'Alice',
-                'Bob',
-                'Alice',
-                'Charlie',
-                'Ronaldo',
-                'Bob',
-                'Alice',
-                'Messi'
-            ])
-            | 'Count appearances' >> beam.combiners.Count.PerElement()
-            | 'Print results' >> beam.Map(print)
+            p
+            | "Create Names"
+            >> beam.Create(["Alice", "Bob", "Alice", "Charlie", "Ronaldo", "Bob", "Alice", "Messi"])
+            | "Count appearances" >> beam.combiners.Count.PerElement()
+            | "Print results" >> beam.Map(print)
         )

@@ -13,6 +13,7 @@ Example output:
     {'user': 'A', 'item': 'item2'}
     {'user': 'B', 'item': 'item3'}
 """
+
 import json
 
 import apache_beam as beam
@@ -29,7 +30,7 @@ def explode_purchases(record):
         yield {"user": data["user"], "item": item}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         (
             p

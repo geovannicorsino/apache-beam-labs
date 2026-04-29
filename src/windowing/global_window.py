@@ -1,4 +1,4 @@
-'''
+"""
 Global Windowing | Live Scoreboard
 
 Example input:
@@ -8,7 +8,8 @@ Example input:
 Example output:
     Brazil               2 goal(s)
     Argentina            1 goal(s)
-'''
+"""
+
 import json
 
 import apache_beam as beam
@@ -34,7 +35,7 @@ def print_separator(_):
     print("-" * 35)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     options = PipelineOptions()
     options.view_as(StandardOptions).streaming = True
 
@@ -44,7 +45,8 @@ if __name__ == '__main__':
             | "Read" >> beam.io.ReadFromPubSub(subscription=SUBSCRIPTION)
             | "Parse" >> beam.Map(parse_message)
             | "ExtractTeam" >> beam.Map(lambda e: (e["team"], 1))
-            | "Window" >> beam.WindowInto(
+            | "Window"
+            >> beam.WindowInto(
                 GlobalWindows(),
                 trigger=Repeatedly(AfterCount(1)),
                 accumulation_mode=AccumulationMode.ACCUMULATING,

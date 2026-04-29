@@ -18,6 +18,7 @@ Example output (first 10 lines):
     1,Alice,HR
     2,Bob,Engineering
 """
+
 import apache_beam as beam
 
 
@@ -32,7 +33,7 @@ class TakeFirstN(beam.DoFn):
             yield element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         names = (
             p

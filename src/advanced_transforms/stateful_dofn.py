@@ -32,15 +32,16 @@ Example output:
     ('order-2', {'amount': 200.0})
     ('order-3', {'amount': 150.0})
 """
+
 import apache_beam as beam
 from apache_beam.coders import VarIntCoder
 from apache_beam.transforms.userstate import ReadModifyWriteStateSpec
 
 
 class DeduplicateByKeyDoFn(beam.DoFn):
-    STATE_SPEC  = ReadModifyWriteStateSpec("num_elements", VarIntCoder())
+    STATE_SPEC = ReadModifyWriteStateSpec("num_elements", VarIntCoder())
 
-    def process(self, element, state=beam.DoFn.StateParam(STATE_SPEC )):
+    def process(self, element, state=beam.DoFn.StateParam(STATE_SPEC)):
         key, value = element
 
         if state.read() is not None:
@@ -52,17 +53,20 @@ class DeduplicateByKeyDoFn(beam.DoFn):
         yield element
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         (
             p
-            | "Events" >> beam.Create([
-                ("order-1", {"amount": 100.0}),
-                ("order-2", {"amount": 200.0}),
-                ("order-1", {"amount": 100.0}),  # duplicate
-                ("order-3", {"amount": 150.0}),
-                ("order-2", {"amount": 200.0}),  # duplicate
-            ])
+            | "Events"
+            >> beam.Create(
+                [
+                    ("order-1", {"amount": 100.0}),
+                    ("order-2", {"amount": 200.0}),
+                    ("order-1", {"amount": 100.0}),  # duplicate
+                    ("order-3", {"amount": 150.0}),
+                    ("order-2", {"amount": 200.0}),  # duplicate
+                ]
+            )
             | "Deduplicate" >> beam.ParDo(DeduplicateByKeyDoFn())
             | "Print" >> beam.Map(print)
         )

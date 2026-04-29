@@ -1,17 +1,18 @@
-'''Common Transforms motivating challenge
+"""Common Transforms motivating challenge
 
 You are provided with a PCollection created from the array of taxi order prices in a csv file.
 Your task is to find how many orders are below $15 and how many are equal to or above $15.
 Return it as a map structure (key-value), make above or below the key, and the total dollar
 value (sum) of orders - the value.
 Although there are many ways to do this, try using another transformation presented in this module.
-'''
+"""
+
 import csv
 from typing import Any
 
 import apache_beam as beam
 
-CSV_PATH = 'data/challenge/sample1000.csv'
+CSV_PATH = "data/challenge/sample1000.csv"
 
 SCHEMA = {
     "VendorID": int,
@@ -69,18 +70,17 @@ def parse_row(line: str, fields: list[str], schema: dict) -> dict[str, Any]:
     }
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         taxi_orders = (
             p
-            | 'Read Taxi Orders' >> beam.io.ReadFromText(CSV_PATH, skip_header_lines=1)
-            | 'Split Line to Dict' >> beam.Map(
-                parse_row, fields=get_header(CSV_PATH), schema=SCHEMA
+            | "Read Taxi Orders" >> beam.io.ReadFromText(CSV_PATH, skip_header_lines=1)
+            | "Split Line to Dict"
+            >> beam.Map(parse_row, fields=get_header(CSV_PATH), schema=SCHEMA)
+            | "Key by threshold"
+            >> beam.Map(
+                lambda x: ("below" if x["total_amount"] < 15 else "above", x["total_amount"])
             )
-            | 'Key by threshold' >> beam.Map(
-                lambda x: ("below" if x["total_amount"] <
-                           15 else "above", x["total_amount"])
-            )
-            | 'Sum total amounts by key' >> beam.CombinePerKey(sum)
-            | 'Print Orders' >> beam.Map(print)
+            | "Sum total amounts by key" >> beam.CombinePerKey(sum)
+            | "Print Orders" >> beam.Map(print)
         )

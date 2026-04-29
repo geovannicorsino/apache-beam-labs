@@ -13,6 +13,7 @@ Beam testing best practices:
     PCollections in distributed runners.
   - Import the class under test directly — do not re-define it in the test file.
 """
+
 import unittest
 
 import apache_beam as beam
@@ -24,88 +25,79 @@ from src.core_transforms.combine.combine_fn import SumEvenFn
 
 
 class TestSumEvenFn(unittest.TestCase):
-
     def test_sums_only_even_numbers(self):
         with TestPipeline() as p:
-            result = (
-                p
-                | beam.Create([1, 2, 3, 4, 5])
-                | beam.CombineGlobally(SumEvenFn())
-            )
+            result = p | beam.Create([1, 2, 3, 4, 5]) | beam.CombineGlobally(SumEvenFn())
             # 2 + 4 = 6
             assert_that(result, equal_to([6]))
 
     def test_all_odd_returns_zero(self):
         with TestPipeline() as p:
-            result = (
-                p
-                | beam.Create([1, 3, 5, 7])
-                | beam.CombineGlobally(SumEvenFn())
-            )
+            result = p | beam.Create([1, 3, 5, 7]) | beam.CombineGlobally(SumEvenFn())
             assert_that(result, equal_to([0]))
 
     def test_all_even(self):
         with TestPipeline() as p:
-            result = (
-                p
-                | beam.Create([2, 4, 6])
-                | beam.CombineGlobally(SumEvenFn())
-            )
+            result = p | beam.Create([2, 4, 6]) | beam.CombineGlobally(SumEvenFn())
             assert_that(result, equal_to([12]))
 
     def test_single_element(self):
         with TestPipeline() as p:
-            result = (
-                p
-                | beam.Create([4])
-                | beam.CombineGlobally(SumEvenFn())
-            )
+            result = p | beam.Create([4]) | beam.CombineGlobally(SumEvenFn())
             assert_that(result, equal_to([4]))
 
 
 class TestSumEvenOrOddFn(unittest.TestCase):
-
     def test_separates_even_and_odd_per_key(self):
         with TestPipeline() as p:
             result = (
                 p
-                | beam.Create([
-                    ('Ronaldo', 1),
-                    ('Messi', 2),
-                    ('Messi', 3),
-                    ('Neymar', 4),
-                    ('Neymar', 5),
-                ])
+                | beam.Create(
+                    [
+                        ("Ronaldo", 1),
+                        ("Messi", 2),
+                        ("Messi", 3),
+                        ("Neymar", 4),
+                        ("Neymar", 5),
+                    ]
+                )
                 | beam.CombinePerKey(SumEvenOrOddFn())
             )
-            assert_that(result, equal_to([
-                ('Ronaldo', {'even': 0, 'odd': 1}),
-                ('Messi',   {'even': 2, 'odd': 3}),
-                ('Neymar',  {'even': 4, 'odd': 5}),
-            ]))
+            assert_that(
+                result,
+                equal_to(
+                    [
+                        ("Ronaldo", {"even": 0, "odd": 1}),
+                        ("Messi", {"even": 2, "odd": 3}),
+                        ("Neymar", {"even": 4, "odd": 5}),
+                    ]
+                ),
+            )
 
     def test_all_even_values(self):
         with TestPipeline() as p:
-            result = (
-                p
-                | beam.Create([('a', 2), ('a', 4)])
-                | beam.CombinePerKey(SumEvenOrOddFn())
+            result = p | beam.Create([("a", 2), ("a", 4)]) | beam.CombinePerKey(SumEvenOrOddFn())
+            assert_that(
+                result,
+                equal_to(
+                    [
+                        ("a", {"even": 6, "odd": 0}),
+                    ]
+                ),
             )
-            assert_that(result, equal_to([
-                ('a', {'even': 6, 'odd': 0}),
-            ]))
 
     def test_all_odd_values(self):
         with TestPipeline() as p:
-            result = (
-                p
-                | beam.Create([('a', 1), ('a', 3)])
-                | beam.CombinePerKey(SumEvenOrOddFn())
+            result = p | beam.Create([("a", 1), ("a", 3)]) | beam.CombinePerKey(SumEvenOrOddFn())
+            assert_that(
+                result,
+                equal_to(
+                    [
+                        ("a", {"even": 0, "odd": 4}),
+                    ]
+                ),
             )
-            assert_that(result, equal_to([
-                ('a', {'even': 0, 'odd': 4}),
-            ]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

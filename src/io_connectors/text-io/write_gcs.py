@@ -12,14 +12,16 @@ Example output (gs://bucket/data/test/names.txt):
     Bob
     Charlie
 """
+
 import apache_beam as beam
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         names = (
             p
             | "Create a list of names" >> beam.Create(["Alice", "Bob", "Charlie"])
-            | "Write to GCS" >> beam.io.WriteToText(
+            | "Write to GCS"
+            >> beam.io.WriteToText(
                 "gs://geo-test-labs/data/test/names",
                 file_name_suffix=".txt",
                 shard_name_template="",

@@ -26,29 +26,34 @@ Example output (BigQuery table geovanni-corsino-labs:beam_labs.people):
     1  | Alice | 30
     2  | Bob   | 25
 """
+
 import apache_beam as beam
 from apache_beam.io.gcp.bigquery import WriteToBigQuery
 
-TABLE = 'geovanni-corsino-labs:beam_labs.people'
+TABLE = "geovanni-corsino-labs:beam_labs.people"
 
 SCHEMA = {
-    'fields': [
-        {'name': 'id',   'type': 'INTEGER', 'mode': 'REQUIRED'},
-        {'name': 'name', 'type': 'STRING',  'mode': 'REQUIRED'},
-        {'name': 'age',  'type': 'INTEGER', 'mode': 'NULLABLE'},
+    "fields": [
+        {"name": "id", "type": "INTEGER", "mode": "REQUIRED"},
+        {"name": "name", "type": "STRING", "mode": "REQUIRED"},
+        {"name": "age", "type": "INTEGER", "mode": "NULLABLE"},
     ]
 }
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         (
             p
-            | 'Create rows' >> beam.Create([
-                {'id': 1, 'name': 'Alice', 'age': 30},
-                {'id': 2, 'name': 'Bob',   'age': 25},
-                {'id': 3, 'name': 'Carol', 'age': 35},
-            ])
-            | 'WriteToBigQuery' >> WriteToBigQuery(
+            | "Create rows"
+            >> beam.Create(
+                [
+                    {"id": 1, "name": "Alice", "age": 30},
+                    {"id": 2, "name": "Bob", "age": 25},
+                    {"id": 3, "name": "Carol", "age": 35},
+                ]
+            )
+            | "WriteToBigQuery"
+            >> WriteToBigQuery(
                 table=TABLE,
                 schema=SCHEMA,
                 write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,

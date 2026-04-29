@@ -25,12 +25,12 @@ Example output:
     (0, 'jumps'), (1, 'over')         ← first half of sentence 2
     (2, 'the'), (3, 'lazy'), (4, 'dog') ← second half of sentence 2
 """
+
 import apache_beam as beam
 from apache_beam.io.restriction_trackers import OffsetRange, OffsetRestrictionTracker
 
 
 class WordRangeProvider(beam.RestrictionProvider):
-
     def initial_restriction(self, element):
         """Create the initial restriction covering all words in the element."""
         words = element.split()
@@ -67,14 +67,17 @@ class ProcessWordsSplittable(beam.DoFn):
             cur += 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         (
             p
-            | 'Create sentences' >> beam.Create([
-                'the quick brown fox',
-                'jumps over the lazy dog',
-            ])
-            | 'Process words' >> beam.ParDo(ProcessWordsSplittable())
-            | 'Print' >> beam.Map(print)
+            | "Create sentences"
+            >> beam.Create(
+                [
+                    "the quick brown fox",
+                    "jumps over the lazy dog",
+                ]
+            )
+            | "Process words" >> beam.ParDo(ProcessWordsSplittable())
+            | "Print" >> beam.Map(print)
         )

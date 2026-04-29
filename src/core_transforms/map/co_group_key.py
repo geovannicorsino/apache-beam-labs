@@ -13,6 +13,7 @@ Example output:
     ('Bob',     {'employee': ['Engineering'], 'salary': [8000]})
     ('Charlie', {'employee': ['HR'],          'salary': [6000]})
 """
+
 import apache_beam as beam
 
 employees = [
@@ -27,7 +28,7 @@ salaries = [
     ("Charlie", 6000),
 ]
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with beam.Pipeline() as p:
         emp_pc = p | "Employees" >> beam.Create(employees)
         sal_pc = p | "Salaries" >> beam.Create(salaries)
