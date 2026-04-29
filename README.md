@@ -1,7 +1,9 @@
 # Apache Beam Labs 🚀
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![Apache Beam](https://img.shields.io/badge/Apache%20Beam-2.71.0-orange.svg)](https://beam.apache.org/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![CI](https://github.com/geovannicorsino/apache-beam-labs/actions/workflows/ci.yml/badge.svg)](https://github.com/geovannicorsino/apache-beam-labs/actions/workflows/ci.yml)
 
 A hands-on learning project exploring Apache Beam concepts through progressively complex examples, following the official documentation and Tour of Beam guide. Perfect for developers looking to master data processing pipelines with Apache Beam!
 
@@ -14,12 +16,9 @@ A hands-on learning project exploring Apache Beam concepts through progressively
 
 ## 📋 Requirements
 
-- Python 3.12+
+- Python 3.12
+- [uv](https://docs.astral.sh/uv/) (package manager)
 - Apache Beam 2.71.0
-
-```bash
-pip install -e ".[dev]"
-```
 
 ## 🗂️ Project Structure
 
@@ -40,19 +39,14 @@ src/
 ## 🚀 Quick Start
 
 1. Clone the repository
-2. Create and activate a virtual environment:
+2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
+3. Install dependencies (cria o `.venv` e resolve o `uv.lock` automaticamente):
    ```bash
-   python -m venv venv
-   venv/Scripts/activate  # Windows
-   source venv/bin/activate  # macOS/Linux
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -e ".[dev]"
+   uv sync --group dev
    ```
 4. Run an example:
    ```bash
-   python src/common_transforms/count.py
+   uv run python src/common_transforms/count.py
    ```
 
 ## 📖 Examples
@@ -160,21 +154,28 @@ src/
 To run any example, navigate to the project root and execute:
 
 ```bash
-python src/<path_to_example>.py
+uv run python src/<path_to_example>.py
 ```
 
 For example:
 
 ```bash
-python src/common_transforms/count.py
+uv run python src/common_transforms/count.py
 ```
 
 ## 🧪 Tests
 
-Unit tests use Apache Beam's `TestPipeline` with `assert_that` to validate pipeline outputs without side effects.
+Unit tests use Apache Beam's `TestPipeline` com `assert_that` para validar outputs sem side effects.
 
 ```bash
-venv/Scripts/python.exe -m pytest tests/ -W ignore
+uv run pytest
+```
+
+Lint e formatação:
+
+```bash
+uv run ruff check .
+uv run ruff format --check .
 ```
 
 | File                                                                       | What it tests                                      |
